@@ -15,7 +15,7 @@ const PostRow = (props) => {
         <TableRow 
             key={props.post.id} 
             className={classes.postRow}
-            onClick={e => props.handleClick(e)}
+            onClick={e => props.handleClick(e, props.post.id)}
         >
             <TableCell component="th" scope="row" >
                 <div 

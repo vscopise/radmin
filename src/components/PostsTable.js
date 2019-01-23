@@ -12,6 +12,8 @@ import {
     withStyles,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
+import PostEditor from './PostEditor';
+import Loading from './Loading';
 
 class PostsTable extends Component {
     constructor(props) {
@@ -77,10 +79,15 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-    fetch_post = (e) => {
-        console.log('edit-post');
+    fetch_post = (e, id) => {
         this.setState({
-            post: e.target
+            post: id
+        })
+    }
+
+    handleClose = () => {
+        this.setState({
+            post: false
         })
     }
 
@@ -88,7 +95,7 @@ class PostsTable extends Component {
         const { classes } = this.props;
 
         return (
-          <Paper className={classes.root}>
+          <div className={classes.root}>
             {
                 ! this.state.post &&
                 <Table className={classes.table}>
@@ -101,28 +108,39 @@ class PostsTable extends Component {
                         </TableRow>
                     </TableHead>
                     {
-                    ! this.state.loadingPost && 
-                    ! this.state.loadingUsers && 
-                    ! this.state.loadingCategories &&
-                    <TableBody>
+                        ! this.state.loadingPost && 
+                        ! this.state.loadingUsers && 
+                        ! this.state.loadingCategories &&
+                        <TableBody>
                         {this.state.posts.map(post => (
                             <PostRow 
-                                post={post}
-                                users={this.state.users}
-                                categories={this.state.categories}
-                                key={post.id}
-                                handleClick={this.fetch_post}
+                            post={post}
+                            users={this.state.users}
+                            categories={this.state.categories}
+                            key={post.id}
+                            handleClick={this.fetch_post}
                             />
-                        ))}
+                            ))}
                     </TableBody>
                 }
                 </Table>
             }
             {
-                this.state.post &&
-                <p>id</p>
+                ( this.state.loadingPosts ||
+                this.state.loadingUsers ||
+                this.state.loadingCategories ) &&
+                <Loading />
             }
-          </Paper>
+            {
+                this.state.post &&
+                <PostEditor 
+                    postContent={this.state.posts.find (
+                        post => post.id === this.state.post
+                    )}
+                    handleClose={this.handleClose}
+                />
+            }
+          </div>
         );
     }
     

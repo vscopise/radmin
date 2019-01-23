@@ -1,8 +1,9 @@
 const styles = theme => ({
     root: {
-      width: '100%',
+      width: '90%',
       marginTop: theme.spacing.unit * 3,
       overflowX: 'auto',
+      margin: '0 auto',
     },
     main: {
       width: 'auto',
@@ -67,6 +68,10 @@ const styles = theme => ({
     noClick: {
       cursor: 'initial',
     },
+    Loading: {
+      textAlign: 'center',
+      padding: `${theme.spacing.unit * 2}px 0`,
+    }
   });
 
   export default styles;
