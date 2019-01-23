@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PostRow from './PostRow';
 import * as Constants from '../assets/Constants';
 import PropTypes from 'prop-types';
 import {
@@ -17,18 +18,19 @@ class PostsTable extends Component {
         super(props);
         this.state = {
             posts: [],
+            post: false,
             users: [],
             categories: [],
-            isLoading: true
+            loadingPosts: true,
+            loadingUsers: true,
+            loadingCategories: true,
         };
     }
 
     componentDidMount() {
-        this.setState({isLoading: true});
-        this.fetch_posts();
         this.fetch_users();
         this.fetch_categories();
-        this.setState({isLoading: false});
+        this.fetch_posts();
     }
 
     fetch_posts = () => {
@@ -42,6 +44,7 @@ class PostsTable extends Component {
         .then(response => response.json())
         .then(posts => this.setState({
             posts: posts,
+            loadingPosts: false
         }))
         .catch(error => console.log(error))
     }
@@ -55,6 +58,7 @@ class PostsTable extends Component {
         .then(response => response.json())
         .then(users => this.setState({
             users: users,
+            loadingUsers: false
         }))
         .catch(error => console.log(error))
     }
@@ -68,8 +72,16 @@ class PostsTable extends Component {
         .then(response => response.json())
         .then(categories => this.setState({
             categories: categories,
+            loadingCategories: false
         }))
         .catch(error => console.log(error))
+    }
+
+    fetch_post = (e) => {
+        console.log('edit-post');
+        this.setState({
+            post: e.target
+        })
     }
 
     render(){
@@ -77,51 +89,39 @@ class PostsTable extends Component {
 
         return (
           <Paper className={classes.root}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Título</TableCell>
-                  <TableCell align="right">Autor</TableCell>
-                  <TableCell align="right">Categorías</TableCell>
-                  <TableCell align="right">Fecha</TableCell>
-                </TableRow>
-              </TableHead>
-              {
-                ! this.state.isLoading &&
-                <TableBody>
-                    {this.state.posts.map(post => (
-                    <TableRow key={post.id}>
-                        <TableCell component="th" scope="row" >
-                            <div 
-                                dangerouslySetInnerHTML={{__html: post.title.rendered}}
+            {
+                ! this.state.post &&
+                <Table className={classes.table}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Título</TableCell>
+                            <TableCell>Autor</TableCell>
+                            <TableCell>Categorías</TableCell>
+                            <TableCell>Fecha</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    {
+                    ! this.state.loadingPost && 
+                    ! this.state.loadingUsers && 
+                    ! this.state.loadingCategories &&
+                    <TableBody>
+                        {this.state.posts.map(post => (
+                            <PostRow 
+                                post={post}
+                                users={this.state.users}
+                                categories={this.state.categories}
+                                key={post.id}
+                                handleClick={this.fetch_post}
                             />
-                        </TableCell>
-                        <TableCell>
-                            {
-                                this.state.users.find(
-                                    user => user.id === post.author
-                                ).name
-                            }
-                        </TableCell>
-                        <TableCell>
-                            {post.categories.map(cat => (
-                                <span>
-                                    ll
-                                    {
-                                        /*this.state.categories.find (
-                                            category => category.id === cat
-                                        ).name*/
-                                        //cat
-                                    }
-                                </span>
-                            ))}
-                        </TableCell>
-                        <TableCell align="right">{post.date}</TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-              }
-            </Table>
+                        ))}
+                    </TableBody>
+                }
+                </Table>
+            }
+            {
+                this.state.post &&
+                <p>id</p>
+            }
           </Paper>
         );
     }

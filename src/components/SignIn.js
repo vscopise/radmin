@@ -5,8 +5,6 @@ import {
   Button,
   CssBaseline,
   FormControl,
-  FormControlLabel,
-  Checkbox,
   Input,
   InputLabel,
   Paper,
@@ -50,10 +48,6 @@ const SignIn = (props) => {
             onChange={e => props.password(e.target.value)}
           />
         </FormControl>
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
-        />
         {
           props.isLoading && <p>Cargando...</p>
         }

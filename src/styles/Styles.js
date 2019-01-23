@@ -37,14 +37,25 @@ const styles = theme => ({
       fontFamily: theme.typography.fontFamily,
       minWidth: 700,
     },
+    postRow: {
+      color: '#555',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: theme.palette.grey[200],
+      },
+      '& .cat' : {
+        marginRight: 5,
+        '&::after': {
+          content: `','`,
+        },  
+      }
+    },
     flexContainer: {
       display: 'flex',
       alignItems: 'center',
       boxSizing: 'border-box',
     },
-    tableRow: {
-      cursor: 'pointer',
-    },
+    
     tableRowHover: {
       '&:hover': {
         backgroundColor: theme.palette.grey[200],
