@@ -2,8 +2,29 @@ const styles = theme => ({
     root: {
       width: '90%',
       marginTop: theme.spacing.unit * 3,
-      overflowX: 'auto',
-      margin: '0 auto',
+      //overflowX: 'auto',
+      margin: 'auto',
+      //'& div.editors': {
+      //  overflowX: 'scroll'
+      //},
+      '& div.toolbar': {
+        width:'80%',
+        margin: 'auto',
+      },
+      '& div.DraftEditor-editorContainer': {
+        marginTop: theme.spacing.unit * 3,
+        //boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
+        backgroundColor: '#fffef7',
+        width:'80%',
+        margin:'auto',
+        boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
+        height:300,
+        overflowY: 'scroll',
+        padding:20,
+        fontSize: 18,
+      
+
+      }
     },
     main: {
       width: 'auto',

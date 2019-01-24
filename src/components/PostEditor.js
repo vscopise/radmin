@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import {ContentState, Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
+import {
+    ContentState, 
+    Editor, 
+    EditorState, 
+    RichUtils, 
+    convertToRaw 
+} from 'draft-js';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 
 
@@ -18,6 +24,7 @@ import styles from '../styles/Styles';
 
 
 class PostEditor extends Component {
+    
     constructor(props) {
         super(props);
         let editorState;
@@ -46,17 +53,12 @@ class PostEditor extends Component {
         return 'not-handled';
     }
     
-    onUnderlineClick = () => {
-        this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
+
+
+    _onClick = (e) => {
+        this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, e.target.name));
     }
     
-    onBoldClick = () => {
-        this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'))
-    }
-    
-    onItalicClick = () => {
-        this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'))
-    }
 
     onChange = (editorState) => {
         this.setState({
@@ -65,6 +67,11 @@ class PostEditor extends Component {
     }
 
     render() {
+        const styles = ['H2', 'BOLD', 'ITALIC', 'UNDERLINE', 'CODE'];
+        const buttons = styles.map(style => {
+          return <button key={style} onClick={this._onClick} name={style}>{style}</button>
+        })
+    
         return(
             <div className="editorContainer">
                 <Grid container spacing={24}>
@@ -81,9 +88,9 @@ class PostEditor extends Component {
                     </Grid>
                     <Grid item xs={12} sm={1}></Grid>
                 </Grid>
-                <button onClick={this.onUnderlineClick}>U</button>
-                <button onClick={this.onBoldClick}><b>B</b></button>
-                <button onClick={this.onItalicClick}><em>I</em></button>
+                <div className='toolbar'>
+                  {buttons}
+                </div>
                 <div className="editors">
                     <Editor 
                         editorState={this.state.editorState}
