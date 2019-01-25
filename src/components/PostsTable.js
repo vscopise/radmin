@@ -3,7 +3,6 @@ import PostRow from './PostRow';
 import * as Constants from '../assets/Constants';
 import PropTypes from 'prop-types';
 import {
-    Paper,
     Table,
     TableBody,
     TableCell,

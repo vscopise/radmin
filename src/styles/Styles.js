@@ -2,29 +2,96 @@ const styles = theme => ({
     root: {
       width: '90%',
       marginTop: theme.spacing.unit * 3,
-      //overflowX: 'auto',
       margin: 'auto',
-      //'& div.editors': {
-      //  overflowX: 'scroll'
-      //},
-      '& div.toolbar': {
-        width:'80%',
-        margin: 'auto',
-      },
-      '& div.DraftEditor-editorContainer': {
-        marginTop: theme.spacing.unit * 3,
-        //boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
-        backgroundColor: '#fffef7',
-        width:'80%',
-        margin:'auto',
-        boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
-        height:300,
-        overflowY: 'scroll',
-        padding:20,
-        fontSize: 18,
-      
+      '& div.postEditor': {
+        '& .postItem': {
+          width: '80%',
+          margin: 'auto',
+        },
+        '& .title': {
+        },
+        '& div.contentWrap': {
+          padding: '0 20px 20px',
+          marginTop: 20,
+          width:'80%',
+          margin:'auto',
+          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
+        },
+        '& div.editorContainer': {
+         // marginTop: theme.spacing.unit * 3,
+          /*backgroundColor: '#fff',
+          width:'80%',
+          margin:'auto',
+          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',*/
+          
+          padding:20,
+          fontSize: 18,
+        },
+        '& .excerpt': {
+          backgroundColor: '#fff',
+          width:'80%',
+          margin:'auto',
+          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
 
-      }
+          height:150,
+          overflowY: 'hidden',
+        },
+        '& .content': {
+          height:450,
+          //overflowY: 'scroll',
+          overflowY: 'auto',
+        },
+        '& .toolbar': {
+          textAlign: 'center',
+          margin: '0.5em',
+          padding: '0.5em',
+          '& .RichEditor-activeButton': {
+            backgroundColor: '#feb47b',
+            color: 'white',
+          },
+          
+          '& select': {
+            padding: '0.5em',
+            border: 'none',
+            margin: '0.35em',
+            borderRadius: 6,
+            fontFamily: 'Open Sans',
+            fontSize: 13,
+            height: '2.25em',
+          },
+          
+          '& button, select': {
+            backgroundImage: 'linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%)',
+            boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
+          },
+          
+          '& #bold': {
+            fontWeight: 'bold',
+          },
+          
+          '& #italic': {
+            fontStyle: 'italic',
+            fontFamily: 'serif',
+          },
+          
+          '& #underline': {
+            textDecoration: 'underline',
+          },
+  
+          '& .styleButton, .RichEditor-styleButton': {
+            padding: '0.5em',
+            backgroundImage: 'linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%)',
+            border: 'none',
+            margin: '0.35em',
+            width: '2.75em',
+            fontFamily: 'Open Sans',
+            fontSize: 13,
+            height: '2.25em',
+            borderRadius: 4
+          },
+        },
+      },
+
     },
     main: {
       width: 'auto',
