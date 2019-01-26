@@ -1,19 +1,17 @@
 const styles = theme => ({
     root: {
       backgroundColor: '#fafafa',
-      //width: '90%',
-      //marginTop: theme.spacing.unit * 3,
-      //margin: 'auto',
       padding: theme.spacing.unit * 3,
       '& div.postEditor': {
-        //backgroundColor: '#f0f0f0',
         '& .postItem': {
-         // width: '90%',
-         // margin: 'auto',
+          marginBottom: 20,
+          '& input': {
+            backgroundColor: '#fff',
+          },
+          backgroundColor: '#fff',
         },
         '& .title': {
           '& input': {
-            backgroundColor: '#fff',
             fontSize: '1.5em',
           }
         },
@@ -21,26 +19,13 @@ const styles = theme => ({
           backgroundColor: '#fff',
           padding: '0 20px 20px',
           marginTop: 20,
-//          width:'90%',
-//          margin:'auto',
         },
         '& div.editorContainer': {
           padding:20,
           fontSize: 18,
         },
-        '& .excerpt': {
-          backgroundColor: '#fff',
-          marginTop: 20,
-//          width:'90%',
-//          margin:'auto',
-//          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
-          height:100,
-          overflowY: 'hidden',
-        },
         '& .content': {
-          height:450,
-          //overflowY: 'scroll',
-          overflowY: 'auto',
+          minHeight:200,
         },
         '& .toolbar': {
           textAlign: 'center',

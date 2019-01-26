@@ -54,6 +54,8 @@ class PostEditor extends Component {
             editorExcerptState,
             editorExcerptHtml: stateToHTML(editorExcerptState.getCurrentContent()),
 
+            //postTitle: dangerouslySetInnerHTML={ __html: this.props.postContent.title.rendered },
+            postTitle: this.props.postContent.title.rendered,
         };
     }
 
@@ -111,6 +113,15 @@ class PostEditor extends Component {
                     <Grid item xs={12} sm={9}>
                         <div className='postItem'>
                             <TextField 
+                                className='colgado'
+                                label='Colgado'
+                                variant='filled'
+                                fullWidth
+                                value={this.state.postTitle}
+                            />
+                        </div>
+                        <div className='postItem'>
+                            <TextField 
                                 className='title'
                                 label='Título'
                                 variant='filled'
@@ -118,7 +129,7 @@ class PostEditor extends Component {
                                 value={this.props.postContent.title.rendered}
                             />
                         </div>
-                        <div className='editorContainer excerpt'>
+                        <div className='editorContainer postItem'>
                             <Editor 
                                 editorState={this.state.editorExcerptState}
                                 onChange= { this.onExcerptChange }
