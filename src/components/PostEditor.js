@@ -108,60 +108,57 @@ class PostEditor extends Component {
         return(
             <div className='postEditor'>
                 <Grid container spacing={24}>
-                    <Grid item xs={12} sm={8}></Grid>
-                    <Grid item xs={12} sm={2}>
+                    <Grid item xs={12} sm={9}>
+                        <div className='postItem'>
+                            <TextField 
+                                className='title'
+                                label='Título'
+                                variant='filled'
+                                fullWidth
+                                value={this.props.postContent.title.rendered}
+                            />
+                        </div>
+                        <div className='editorContainer excerpt'>
+                            <Editor 
+                                editorState={this.state.editorExcerptState}
+                                onChange= { this.onExcerptChange }
+                            />
+                        </div>
+                        <div className='contentWrap'>
+                            <div className='toolbar'>
+                                <BlockStyleToolbar 
+                                    editorState={this.state.editorState}
+                                    onToggle={this.toggleBlockType}
+                                />
+                                <button className="styleButton" onClick={this.onUnderlineClick}>
+                                    U
+                                </button>
+                                <button className="styleButton" onClick={this.onBoldClick}>
+                                    <b>B</b>
+                                </button>
+                                <button className="styleButton" onClick={this.onItalicClick}>
+                                    <em>I</em>
+                                </button>
+                            </div>
+                            <div className='editorContainer content'>
+                                <Editor 
+                                    blockStyleFn={getBlockStyle}
+                                    editorState={this.state.editorState}
+                                    handleKeyCommand={this.handleKeyCommand}
+                                    onChange= { this.onChange }
+                                />
+                            </div>
+                        </div>                    
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <Button variant="contained" color="primary" onClick={this.props.handleClose}>
+                            Cerrar
+                        </Button>
                         <Button variant="contained" color="primary" onClick={this.props.handleClose}>
                             Cerrar
                         </Button>
                     </Grid>
-                    <Grid item xs={12} sm={2}>
-                        <Button variant="contained" color="primary" onClick={this.props.handleClose}>
-                            Cerrar
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={1}></Grid>
                 </Grid>
-                
-                <div className='postItem'>
-                    <TextField 
-                        className='title'
-                        label='Título'
-                        variant='outlined'
-                        fullWidth
-                        value={this.props.postContent.title.rendered}
-                    />
-                </div>
-                <div className='editorContainer excerpt'>
-                    <Editor 
-                        editorState={this.state.editorExcerptState}
-                        onChange= { this.onExcerptChange }
-                    />
-                </div>
-                <div className='contentWrap'>
-                    <div className='toolbar'>
-                        <BlockStyleToolbar 
-                            editorState={this.state.editorState}
-                            onToggle={this.toggleBlockType}
-                        />
-                        <button className="styleButton" onClick={this.onUnderlineClick}>
-                            U
-                        </button>
-                        <button className="styleButton" onClick={this.onBoldClick}>
-                            <b>B</b>
-                        </button>
-                        <button className="styleButton" onClick={this.onItalicClick}>
-                            <em>I</em>
-                        </button>
-                    </div>
-                    <div className='editorContainer content'>
-                        <Editor 
-                            blockStyleFn={getBlockStyle}
-                            editorState={this.state.editorState}
-                            handleKeyCommand={this.handleKeyCommand}
-                            onChange= { this.onChange }
-                        />
-                    </div>
-                </div>
             </div>
         )
     }

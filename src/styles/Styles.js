@@ -1,39 +1,40 @@
 const styles = theme => ({
     root: {
-      width: '90%',
-      marginTop: theme.spacing.unit * 3,
-      margin: 'auto',
+      backgroundColor: '#fafafa',
+      //width: '90%',
+      //marginTop: theme.spacing.unit * 3,
+      //margin: 'auto',
+      padding: theme.spacing.unit * 3,
       '& div.postEditor': {
+        //backgroundColor: '#f0f0f0',
         '& .postItem': {
-          width: '80%',
-          margin: 'auto',
+         // width: '90%',
+         // margin: 'auto',
         },
         '& .title': {
+          '& input': {
+            backgroundColor: '#fff',
+            fontSize: '1.5em',
+          }
         },
         '& div.contentWrap': {
+          backgroundColor: '#fff',
           padding: '0 20px 20px',
           marginTop: 20,
-          width:'80%',
-          margin:'auto',
-          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
+//          width:'90%',
+//          margin:'auto',
         },
         '& div.editorContainer': {
-         // marginTop: theme.spacing.unit * 3,
-          /*backgroundColor: '#fff',
-          width:'80%',
-          margin:'auto',
-          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',*/
-          
           padding:20,
           fontSize: 18,
         },
         '& .excerpt': {
           backgroundColor: '#fff',
-          width:'80%',
-          margin:'auto',
-          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
-
-          height:150,
+          marginTop: 20,
+//          width:'90%',
+//          margin:'auto',
+//          boxShadow: '0px 0px 6px 1px rgba(0,0,0,0.5)',
+          height:100,
           overflowY: 'hidden',
         },
         '& .content': {
