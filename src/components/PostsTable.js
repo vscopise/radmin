@@ -3,25 +3,33 @@ import PostRow from './PostRow';
 import * as Constants from '../assets/Constants';
 import PropTypes from 'prop-types';
 import {
+    MenuItem,
+    Select,
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
+    TextField,
     withStyles,
+    FormControl,
+    InputLabel,
+    Input,
+    Button,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
 import PostEditor from './PostEditor';
 import Loading from './Loading';
+import PostTableNavBar from './PostTableNavBar';
 
 class PostsTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
             posts: [],
-            post: false,
             users: [],
             categories: [],
+            categoriesSelected: [],
             loadingPosts: true,
             loadingUsers: true,
             loadingCategories: true,
@@ -78,23 +86,38 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-    fetch_post = (e, id) => {
-        this.setState({
-            post: id
-        })
+
+    handleCategoriesChange = event => {
+        this.setState({ 
+            categoriesSelected: this.state.categories.find(
+                category => category.name === event.target.value
+            ).term_id 
+            //categoriesSelected: event.target.value 
+        /*
+        this.props.categories.find(
+                category => category.slug === pathCatName
+            ).term_id
+
+        this.state.categories.find(
+                category => category.name === event.target.value
+            ).term_id
+        */
+        
+        });
     }
 
-    handleClose = () => {
-        this.setState({
-            post: false
-        })
-    }
+    
 
     render(){
         const { classes } = this.props;
 
         return (
           <div className={classes.root}>
+            <PostTableNavBar
+                categories={this.state.categories}
+                categoriesSelected={this.state.categoriesSelected}
+                handleCategoriesChange={this.handleCategoriesChange}
+            />
             {
                 ! this.state.post &&
                 <Table className={classes.table}>
@@ -113,13 +136,13 @@ class PostsTable extends Component {
                         <TableBody>
                         {this.state.posts.map(post => (
                             <PostRow 
-                            post={post}
-                            users={this.state.users}
-                            categories={this.state.categories}
-                            key={post.id}
-                            handleClick={this.fetch_post}
+                                post={post}
+                                users={this.state.users}
+                                categories={this.state.categories}
+                                key={post.id}
+                                handleClick={() => this.props.fetchPost(post)}
                             />
-                            ))}
+                        ))}
                     </TableBody>
                 }
                 </Table>
@@ -129,15 +152,6 @@ class PostsTable extends Component {
                 this.state.loadingUsers ||
                 this.state.loadingCategories ) &&
                 <Loading />
-            }
-            {
-                this.state.post &&
-                <PostEditor 
-                    postContent={this.state.posts.find (
-                        post => post.id === this.state.post
-                    )}
-                    handleClose={this.handleClose}
-                />
             }
           </div>
         );

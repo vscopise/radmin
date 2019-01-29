@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import SignIn from './components/SignIn';
 import * as Constants from './assets/Constants';
 import PostsTable from './components/PostsTable';
+import PostEditor from './components/PostEditor';
+
+import {
+  withStyles,
+} from '@material-ui/core';
+import styles from './styles/Styles';
+import Loading from './components/Loading';
 
 class App extends Component {
   constructor(props) {
@@ -11,6 +18,7 @@ class App extends Component {
       password: '',
       disableSubmitLogin: true,
       token: false,
+      post: false,
       isLoading: false
     };
   }
@@ -51,9 +59,25 @@ class App extends Component {
     .catch(error => console.log(error))
   }
 
+  fetchPost = (post) => {
+    this.setState({ post })
+  }
+
+  handleClose = () => {
+    this.setState({
+        post: false
+    })
+  }
+
+  handleCategoriesChange = (categories) => {
+    
+  }
+
   render() {
+    const { classes } = this.props;
+
     return (
-      <div>
+      <div className={classes.App}>
         {
           !this.state.token &&
           <SignIn 
@@ -66,8 +90,18 @@ class App extends Component {
         }
         {
           this.state.token &&
+          !this.state.post &&
           <PostsTable 
             token={this.state.token}
+            fetchPost={this.fetchPost}
+            handleCategoriesChange={this.handleCategoriesChange}
+          />
+        }
+        {
+          this.state.post &&
+          <PostEditor 
+              postContent={this.state.post}
+              handleClose={this.handleClose}
           />
         }
       </div>
@@ -75,4 +109,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

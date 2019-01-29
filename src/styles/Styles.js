@@ -1,83 +1,91 @@
 const styles = theme => ({
-    root: {
+    App: {
       backgroundColor: '#fafafa',
       padding: theme.spacing.unit * 3,
-      '& div.postEditor': {
-        '& .postItem': {
-          marginBottom: 20,
-          '& input': {
-            backgroundColor: '#fff',
-          },
+
+    },
+    postTableNavBar: {
+      flexGrow: 1
+    },
+    appBar: {
+      backgroundColor: '#cfcfcf',
+      marginBottom: theme.spacing.unit,
+    },
+
+    postEditor: {
+      '& .postItem': {
+        marginBottom: 20,
+        '& input': {
           backgroundColor: '#fff',
         },
-        '& .title': {
-          '& input': {
-            fontSize: '1.5em',
-          }
+        backgroundColor: '#fff',
+      },
+      '& .title': {
+        '& input': {
+          fontSize: '1.5em',
+        }
+      },
+      '& div.contentWrap': {
+        backgroundColor: '#fff',
+        padding: '0 20px 20px',
+        marginTop: 20,
+      },
+      '& div.editorContainer': {
+        padding:20,
+        fontSize: 18,
+      },
+      '& .content': {
+        minHeight:200,
+      },
+      '& .toolbar': {
+        textAlign: 'center',
+        margin: '0.5em',
+        padding: '0.5em',
+        '& .RichEditor-activeButton': {
+          backgroundColor: '#feb47b',
+          color: 'white',
         },
-        '& div.contentWrap': {
-          backgroundColor: '#fff',
-          padding: '0 20px 20px',
-          marginTop: 20,
-        },
-        '& div.editorContainer': {
-          padding:20,
-          fontSize: 18,
-        },
-        '& .content': {
-          minHeight:200,
-        },
-        '& .toolbar': {
-          textAlign: 'center',
-          margin: '0.5em',
+        
+        '& select': {
           padding: '0.5em',
-          '& .RichEditor-activeButton': {
-            backgroundColor: '#feb47b',
-            color: 'white',
-          },
-          
-          '& select': {
-            padding: '0.5em',
-            border: 'none',
-            margin: '0.35em',
-            borderRadius: 6,
-            fontFamily: 'Open Sans',
-            fontSize: 13,
-            height: '2.25em',
-          },
-          
-          '& button, select': {
-            backgroundImage: 'linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%)',
-            boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
-          },
-          
-          '& #bold': {
-            fontWeight: 'bold',
-          },
-          
-          '& #italic': {
-            fontStyle: 'italic',
-            fontFamily: 'serif',
-          },
-          
-          '& #underline': {
-            textDecoration: 'underline',
-          },
-  
-          '& .styleButton, .RichEditor-styleButton': {
-            padding: '0.5em',
-            backgroundImage: 'linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%)',
-            border: 'none',
-            margin: '0.35em',
-            width: '2.75em',
-            fontFamily: 'Open Sans',
-            fontSize: 13,
-            height: '2.25em',
-            borderRadius: 4
-          },
+          border: 'none',
+          margin: '0.35em',
+          borderRadius: 6,
+          fontFamily: 'Open Sans',
+          fontSize: 13,
+          height: '2.25em',
+        },
+        
+        '& button, select': {
+          backgroundImage: 'linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%)',
+          boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
+        },
+        
+        '& #bold': {
+          fontWeight: 'bold',
+        },
+        
+        '& #italic': {
+          fontStyle: 'italic',
+          fontFamily: 'serif',
+        },
+        
+        '& #underline': {
+          textDecoration: 'underline',
+        },
+
+        '& .styleButton, .RichEditor-styleButton': {
+          padding: '0.5em',
+          backgroundImage: 'linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%)',
+          border: 'none',
+          margin: '0.35em',
+          width: '2.75em',
+          fontFamily: 'Open Sans',
+          fontSize: 13,
+          height: '2.25em',
+          borderRadius: 4
         },
       },
-
     },
     main: {
       width: 'auto',
@@ -104,6 +112,11 @@ const styles = theme => ({
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing.unit,
+    },
+    select: {
+      //margin: theme.spacing.unit,
+      minWidth: 200,
+      maxWidth: 500,
     },
     submit: {
       marginTop: theme.spacing.unit * 3,

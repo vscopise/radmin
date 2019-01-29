@@ -107,8 +107,10 @@ class PostEditor extends Component {
     }
 
     render() {
+        const { classes } = this.props;
+
         return(
-            <div className='postEditor'>
+            <div className={classes.postEditor}>
                 <Grid container spacing={24}>
                     <Grid item xs={12} sm={9}>
                         <div className='postItem'>
