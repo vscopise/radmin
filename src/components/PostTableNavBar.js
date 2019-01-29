@@ -56,7 +56,12 @@ const PostTableNavBar = (props) => {
                         </FormControl>
                         </Grid>
                         <Grid item>
-                            <Button color='inherit'>Filtrar</Button>
+                            <Button 
+                                color='inherit'
+                                onClick={props.fetchPosts}
+                            >
+                                Filtrar
+                            </Button>
                         </Grid>
                     </Grid>
                 </Toolbar>

@@ -37,14 +37,22 @@ class PostsTable extends Component {
     }
 
     componentDidMount() {
-        this.fetch_users();
-        this.fetch_categories();
-        this.fetch_posts();
+        this.fetchUsers();
+        this.fetchCategories();
+        this.fetchPosts();
     }
 
-    fetch_posts = () => {
-        
-        fetch(Constants.apiUrl + 'wp/v2/posts', {
+    fetchPosts = () => {
+        this.setState({
+            loadingPosts: true
+        });
+        let catToFetch = '';
+        let varCategoriesSelected = this.state.categoriesSelected;
+        this.state.categoriesSelected.map(
+            catSelected => catToFetch + catSelected
+        );
+        let url = Constants.apiUrl + 'wp/v2/posts' + catToFetch;
+        fetch(Constants.apiUrl + 'wp/v2/posts' + catToFetch, {
             headers: {
                 authorization: 'Bearer ' + this.props.token,
             }, 
@@ -58,7 +66,7 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-    fetch_users = () => {
+    fetchUsers = () => {
         fetch(Constants.apiUrl + 'wp/v2/users?per_page=99', {
             headers: {
                 authorization: 'Bearer ' + this.props.token,
@@ -72,7 +80,7 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-    fetch_categories = () => {
+    fetchCategories = () => {
         fetch(Constants.apiUrl + 'wp/v2/categories?per_page=99', {
             headers: {
                 authorization: 'Bearer ' + this.props.token,
@@ -88,10 +96,28 @@ class PostsTable extends Component {
 
 
     handleCategoriesChange = event => {
-        this.setState({ 
-            categoriesSelected: this.state.categories.find(
+        this.setState({
+            categoriesSelected: event.target.value
+        })
+        /*this.setState({ 
+            categoriesSelected: event.target.value.map(selectedCat => this.state.categories.find(
+                category => category.name === selectedCat
+            ))
+        })*/
+        /*this.setState({ 
+            categoriesSelected: [
+                ...this.state.categoriesSelected, 
+                event.target.value
+            ]
+        })*/
+          
+        /*this.setState({ 
+            categoriesSelected: event.target.value.map(selectedCat => this.state.categories.find(
+                category => category.name === selectedCat
+            ))*/
+            /*categoriesSelected: this.state.categories.find(
                 category => category.name === event.target.value
-            ).term_id 
+            ).term_id */
             //categoriesSelected: event.target.value 
         /*
         this.props.categories.find(
@@ -103,7 +129,7 @@ class PostsTable extends Component {
             ).term_id
         */
         
-        });
+       // });
     }
 
     
@@ -117,6 +143,7 @@ class PostsTable extends Component {
                 categories={this.state.categories}
                 categoriesSelected={this.state.categoriesSelected}
                 handleCategoriesChange={this.handleCategoriesChange}
+                fetchPosts={this.fetchPosts}
             />
             {
                 ! this.state.post &&
@@ -130,9 +157,9 @@ class PostsTable extends Component {
                         </TableRow>
                     </TableHead>
                     {
-                        ! this.state.loadingPost && 
-                        ! this.state.loadingUsers && 
-                        ! this.state.loadingCategories &&
+                        ! ( this.state.loadingPosts ||
+                            this.state.loadingUsers ||
+                            this.state.loadingCategories ) &&
                         <TableBody>
                         {this.state.posts.map(post => (
                             <PostRow 
