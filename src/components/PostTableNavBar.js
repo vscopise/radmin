@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import {
-    Avatar,
     Button,
-    CssBaseline,
     FormControl,
-    Input,
-    InputLabel,
     MenuItem,
-    Paper,
-    Typography,
     withStyles,
     AppBar,
     Toolbar,
     Select,
     Grid,
-    FormHelperText
 } from '@material-ui/core';
   
 import styles from '../styles/Styles';
@@ -57,7 +50,8 @@ const PostTableNavBar = (props) => {
                         </Grid>
                         <Grid item>
                             <Button 
-                                color='inherit'
+                                variant='contained'
+                                color='primary'
                                 onClick={props.fetchPosts}
                             >
                                 Filtrar

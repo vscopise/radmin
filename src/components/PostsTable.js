@@ -3,22 +3,14 @@ import PostRow from './PostRow';
 import * as Constants from '../assets/Constants';
 import PropTypes from 'prop-types';
 import {
-    MenuItem,
-    Select,
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
-    TextField,
     withStyles,
-    FormControl,
-    InputLabel,
-    Input,
-    Button,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
-import PostEditor from './PostEditor';
 import Loading from './Loading';
 import PostTableNavBar from './PostTableNavBar';
 
@@ -30,6 +22,7 @@ class PostsTable extends Component {
             users: [],
             categories: [],
             categoriesSelected: [],
+            categoriesIdSelected: [],
             loadingPosts: true,
             loadingUsers: true,
             loadingCategories: true,
@@ -44,20 +37,28 @@ class PostsTable extends Component {
 
     fetchPosts = () => {
         this.setState({
-            loadingPosts: true
+            loadingPosts: true,
+            posts: [],
         });
         let catToFetch = '';
-        let varCategoriesSelected = this.state.categoriesSelected;
-        this.state.categoriesSelected.map(
-            catSelected => catToFetch + catSelected
-        );
-        let url = Constants.apiUrl + 'wp/v2/posts' + catToFetch;
-        fetch(Constants.apiUrl + 'wp/v2/posts' + catToFetch, {
+        if (this.state.categoriesIdSelected.length>0) {
+            catToFetch = '?categories=' + this.state.categoriesIdSelected.join(',');
+        }
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + catToFetch, {
             headers: {
-                authorization: 'Bearer ' + this.props.token,
-            }, 
-            
-          })
+                Accept: 'applicqtion/json',
+                    'Content-Type': 'application/json',
+                },
+                Authorization: 'Bearer ' + this.props.token,
+            })   
+            //headers: { 
+            //    'Authorization': `Bearer ${this.props.token}` 
+            //},
+            /*headers: new Headers({
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${this.props.token}` 
+            }),*/
+          
         .then(response => response.json())
         .then(posts => this.setState({
             posts: posts,
@@ -94,45 +95,14 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-
     handleCategoriesChange = event => {
         this.setState({
-            categoriesSelected: event.target.value
+            categoriesSelected: event.target.value,
+            categoriesIdSelected: event.target.value.map(selectedCat => this.state.categories.find(
+                category => category.name === selectedCat
+            ).id)
         })
-        /*this.setState({ 
-            categoriesSelected: event.target.value.map(selectedCat => this.state.categories.find(
-                category => category.name === selectedCat
-            ))
-        })*/
-        /*this.setState({ 
-            categoriesSelected: [
-                ...this.state.categoriesSelected, 
-                event.target.value
-            ]
-        })*/
-          
-        /*this.setState({ 
-            categoriesSelected: event.target.value.map(selectedCat => this.state.categories.find(
-                category => category.name === selectedCat
-            ))*/
-            /*categoriesSelected: this.state.categories.find(
-                category => category.name === event.target.value
-            ).term_id */
-            //categoriesSelected: event.target.value 
-        /*
-        this.props.categories.find(
-                category => category.slug === pathCatName
-            ).term_id
-
-        this.state.categories.find(
-                category => category.name === event.target.value
-            ).term_id
-        */
-        
-       // });
     }
-
-    
 
     render(){
         const { classes } = this.props;
@@ -160,7 +130,7 @@ class PostsTable extends Component {
                         ! ( this.state.loadingPosts ||
                             this.state.loadingUsers ||
                             this.state.loadingCategories ) &&
-                        <TableBody>
+                    <TableBody>
                         {this.state.posts.map(post => (
                             <PostRow 
                                 post={post}
