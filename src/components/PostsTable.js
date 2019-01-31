@@ -21,8 +21,11 @@ class PostsTable extends Component {
             posts: [],
             users: [],
             categories: [],
+            status: Constants.status,
             categoriesSelected: [],
+            statusSelected: [],
             categoriesIdSelected: [],
+            statusIdSelected: [],
             loadingPosts: true,
             loadingUsers: true,
             loadingCategories: true,
@@ -42,23 +45,15 @@ class PostsTable extends Component {
         });
         let catToFetch = '';
         if (this.state.categoriesIdSelected.length>0) {
-            catToFetch = '?categories=' + this.state.categoriesIdSelected.join(',');
+            catToFetch = '&categories=' + this.state.categoriesIdSelected.join(',');
         }
-        fetch(Constants.apiUrl + 'wp/v2/posts/' + catToFetch, {
-            headers: {
-                Accept: 'applicqtion/json',
-                    'Content-Type': 'application/json',
-                },
-                Authorization: 'Bearer ' + this.props.token,
-            })   
-            //headers: { 
-            //    'Authorization': `Bearer ${this.props.token}` 
-            //},
-            /*headers: new Headers({
-                'Content-Type': 'application/x-www-form-urlencoded',
+        var url = Constants.apiUrl + 'wp/v2/posts/?status=publish' + catToFetch;
+        fetch(url, {
+            headers: new Headers({
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.props.token}` 
-            }),*/
-          
+            }),
+        })
         .then(response => response.json())
         .then(posts => this.setState({
             posts: posts,
@@ -104,6 +99,8 @@ class PostsTable extends Component {
         })
     }
 
+    handleStatusChange = event => {}
+
     render(){
         const { classes } = this.props;
 
@@ -111,8 +108,11 @@ class PostsTable extends Component {
           <div className={classes.root}>
             <PostTableNavBar
                 categories={this.state.categories}
+                status={this.state.status}
                 categoriesSelected={this.state.categoriesSelected}
+                statusSelected={this.state.statusSelected}
                 handleCategoriesChange={this.handleCategoriesChange}
+                handleStatusChange= {this.handleStatusChange}
                 fetchPosts={this.fetchPosts}
             />
             {
