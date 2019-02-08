@@ -1,91 +1,200 @@
 import React, { Component } from 'react';
+import PostRow from './PostRow';
+import * as Constants from '../assets/Constants';
+import PropTypes from 'prop-types';
 import {
-    Button,
-    FormControl,
-    MenuItem,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
     withStyles,
-    AppBar,
-    Toolbar,
-    Select,
-    Grid,
 } from '@material-ui/core';
-  
 import styles from '../styles/Styles';
+import Loading from './Loading';
+import PostTableNavBar from './PostTableNavBar';
 
-const PostTableNavBar = (props) => {
-    const { classes } = props;
+class PostsTable extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            posts: [],
+            users: [],
+            categories: [],
+            status: [
+                {
+                    id: 'publish',
+                    name: 'Publicadas',
+                },
+                {
+                    id: 'future',
+                    name: 'Programadas',
+                },
+                {
+                    id: 'draft',
+                    name: 'Borradores',
+                },
+                {
+                    id: 'pending',
+                    name: 'Pendientes',
+                },
+                {
+                    id: 'private',
+                    name: 'Privadas',
+                },
+            ],
+            categoriesSelected: [],
+            statusSelected: [],
+            categoriesIdSelected: [],
+            statusIdSelected: [],
+            loadingPosts: true,
+            loadingUsers: true,
+            loadingCategories: true,
+        };
+    }
 
-    return (
-        <div className={classes.postTableNavBar}>
-            <AppBar position='static' className={classes.appBar}>
-                <Toolbar>
-                    <Grid
-                        justify='space-between'
-                        container
-                        spacing={24}
-                    >
-                        <Grid item>
-                            <FormControl>
-                                <Select
-                                    className={classes.select}
-                                    multiple
-                                    displayEmpty
-                                    value={props.categoriesSelected}
-                                    onChange={props.handleCategoriesChange}
-                                    renderValue={selected => {
-                                        if (selected.length === 0) {
-                                        return <em>Todas las categorías</em>;
-                                        }
-                        
-                                        return selected.join(', ');
-                                    }}
-                                >
-                                    {props.categories.map(cat => (
-                                        <MenuItem key={cat.id} value={cat.name}>
-                                            {cat.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item>
-                            <FormControl>
-                                <Select
-                                    className={classes.select}
-                                    multiple
-                                    displayEmpty
-                                    value={props.statusSelected}
-                                    onChange={props.handleStatusChange}
-                                    renderValue={selected => {
-                                        if (selected.length === 0) {
-                                        return <em>Todos los estados</em>;
-                                        }
-                        
-                                        return selected.join(', ');
-                                    }}
-                                >
-                                    {props.status.map(status => (
-                                        <MenuItem key={status.id} value={status.name}>
-                                            {status.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item>
-                            <Button 
-                                variant='contained'
-                                color='primary'
-                                onClick={props.fetchPosts}
-                            >
-                                Filtrar
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Toolbar>
-            </AppBar>
-        </div>
-    )
+    componentDidMount() {
+        this.fetchUsers();
+        this.fetchCategories();
+        this.fetchPosts();
+    }
+
+    fetchPosts = () => {
+        this.setState({
+            loadingPosts: true,
+            posts: [],
+        });
+        let catToFetch = '';
+        if (this.state.categoriesIdSelected.length>0) {
+            catToFetch = '?categories=' + this.state.categoriesIdSelected.join(',');
+        }
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + catToFetch, {
+            headers: {
+                Accept: 'applicqtion/json',
+                    'Content-Type': 'application/json',
+                },
+                Authorization: 'Bearer ' + this.props.token,
+            })   
+            //headers: { 
+            //    'Authorization': `Bearer ${this.props.token}` 
+            //},
+            /*headers: new Headers({
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${this.props.token}` 
+            }),*/
+          
+        .then(response => response.json())
+        .then(posts => this.setState({
+            posts: posts,
+            loadingPosts: false
+        }))
+        .catch(error => console.log(error))
+    }
+
+    fetchUsers = () => {
+        fetch(Constants.apiUrl + 'wp/v2/users?per_page=99', {
+            headers: {
+                authorization: 'Bearer ' + this.props.token,
+            }, 
+          })
+        .then(response => response.json())
+        .then(users => this.setState({
+            users: users,
+            loadingUsers: false
+        }))
+        .catch(error => console.log(error))
+    }
+
+    fetchCategories = () => {
+        fetch(Constants.apiUrl + 'wp/v2/categories?per_page=99', {
+            headers: {
+                authorization: 'Bearer ' + this.props.token,
+            }, 
+          })
+        .then(response => response.json())
+        .then(categories => this.setState({
+            categories: categories,
+            loadingCategories: false
+        }))
+        .catch(error => console.log(error))
+    }
+
+    handleCategoriesChange = event => {
+        this.setState({
+            categoriesSelected: event.target.value,
+            categoriesIdSelected: event.target.value.map(selectedCat => this.state.categories.find(
+                category => category.name === selectedCat
+            ).id)
+        })
+    }
+
+    handleStatusChange = event => {
+        this.setState({
+            statusSelected: event.target.value,
+            statusIdSelected: event.target.value.map(selectedStatus => this.state.status.find(
+                status => status.name === selectedStatus
+            ).id)
+        })
+    }
+
+    render(){
+        const { classes } = this.props;
+
+        return (
+          <div className={classes.root}>
+            <PostTableNavBar
+                categories={this.state.categories}
+                status={this.state.status}
+                categoriesSelected={this.state.categoriesSelected}
+                statusSelected={this.state.statusSelected}
+                handleCategoriesChange={this.handleCategoriesChange}
+                handleStatusChange={this.handleStatusChange}
+                fetchPosts={this.fetchPosts}
+            />
+            {
+                ! this.state.post &&
+                <Table className={classes.table}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Título</TableCell>
+                            <TableCell>Autor</TableCell>
+                            <TableCell>Categorías</TableCell>
+                            <TableCell>Fecha</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    {
+                        ! ( this.state.loadingPosts ||
+                            this.state.loadingUsers ||
+                            this.state.loadingCategories ) &&
+                    <TableBody>
+                        {this.state.posts.map(post => (
+                            <PostRow 
+                                post={post}
+                                users={this.state.users}
+                                categories={this.state.categories}
+                                key={post.id}
+                                handleClick={() => this.props.fetchPost(post)}
+                            />
+                        ))}
+                    </TableBody>
+                }
+                </Table>
+            }
+            {
+                ( this.state.loadingPosts ||
+                this.state.loadingUsers ||
+                this.state.loadingCategories ) &&
+                <Loading />
+            }
+          </div>
+        );
+    }
+    
 }
 
-export default withStyles(styles)(PostTableNavBar);
+
+PostsTable.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(PostsTable);
