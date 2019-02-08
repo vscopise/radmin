@@ -8,7 +8,6 @@ import {
   withStyles,
 } from '@material-ui/core';
 import styles from './styles/Styles';
-import Loading from './components/Loading';
 
 class App extends Component {
   constructor(props) {
