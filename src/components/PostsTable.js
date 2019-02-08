@@ -64,23 +64,24 @@ class PostsTable extends Component {
             loadingPosts: true,
             posts: [],
         });
-        let catToFetch = '';
+        
         let statusToFetch = '';
-        if (this.state.categoriesIdSelected.length>0) {
-            catToFetch = '?categories=' + this.state.categoriesIdSelected.join(',');
-        }
-        if (this.state.statusIdSelected.length>0) {
+        if (this.state.statusIdSelected.length > 0) {
             statusToFetch = '?status=' + this.state.statusIdSelected.join(',');
+        } else {
+            statusToFetch = '?status=publish';
         }
-        //fetch(Constants.apiUrl + 'wp/v2/posts/' + catToFetch + statusToFetch, {
-        fetch(Constants.apiUrl + 'wp/v2/posts/?status=private', {
-
-            headers: {
-                Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                Authorization: 'Bearer ' + this.props.token,
-            })   
+        
+        let catToFetch = '';
+        if (this.state.categoriesIdSelected.length > 0) {
+            catToFetch = '&categories=' + this.state.categoriesIdSelected.join(',');
+        }
+        
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + statusToFetch + catToFetch, {
+            headers: new Headers({
+                Authorization: `Bearer ${this.props.token}`
+            }),
+        })   
         .then(response => response.json())
         .then(posts => this.setState({
             posts: posts,
