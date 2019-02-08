@@ -25,28 +25,52 @@ const PostTableNavBar = (props) => {
                         spacing={24}
                     >
                         <Grid item>
-                        <FormControl>
-                            <Select
-                                className={classes.select}
-                                multiple
-                                displayEmpty
-                                value={props.categoriesSelected}
-                                onChange={props.handleCategoriesChange}
-                                renderValue={selected => {
-                                    if (selected.length === 0) {
-                                      return <em>Todas las categorías</em>;
-                                    }
-                      
-                                    return selected.join(', ');
-                                }}
-                            >
-                                {props.categories.map(cat => (
-                                    <MenuItem key={cat.id} value={cat.name}>
-                                        {cat.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                            <FormControl>
+                                <Select
+                                    className={classes.select}
+                                    multiple
+                                    displayEmpty
+                                    value={props.categoriesSelected}
+                                    onChange={props.handleCategoriesChange}
+                                    renderValue={selected => {
+                                        if (selected.length === 0) {
+                                        return <em>Todas las categorías</em>;
+                                        }
+                        
+                                        return selected.join(', ');
+                                    }}
+                                >
+                                    {props.categories.map(cat => (
+                                        <MenuItem key={cat.id} value={cat.name}>
+                                            {cat.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item>
+                            <FormControl>
+                                <Select
+                                    className={classes.select}
+                                    multiple
+                                    displayEmpty
+                                    value={props.statusSelected}
+                                    onChange={props.handleStatusChange}
+                                    renderValue={selected => {
+                                        if (selected.length === 0) {
+                                        return <em>Todos los estados</em>;
+                                        }
+                        
+                                        return selected.join(', ');
+                                    }}
+                                >
+                                    {props.status.map(status => (
+                                        <MenuItem key={status.id} value={status.name}>
+                                            {status.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item>
                             <Button 

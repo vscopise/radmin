@@ -21,8 +21,32 @@ class PostsTable extends Component {
             posts: [],
             users: [],
             categories: [],
+            status: [
+                {
+                    id: 'publish',
+                    name: 'Publicadas',
+                },
+                {
+                    id: 'future',
+                    name: 'Programadas',
+                },
+                {
+                    id: 'draft',
+                    name: 'Borradores',
+                },
+                {
+                    id: 'pending',
+                    name: 'Pendientes',
+                },
+                {
+                    id: 'private',
+                    name: 'Privadas',
+                },
+            ],
             categoriesSelected: [],
+            statusSelected: [],
             categoriesIdSelected: [],
+            statusIdSelected: [],
             loadingPosts: true,
             loadingUsers: true,
             loadingCategories: true,
@@ -104,6 +128,15 @@ class PostsTable extends Component {
         })
     }
 
+    handleStatusChange = event => {
+        this.setState({
+            statusSelected: event.target.value,
+            statusIdSelected: event.target.value.map(selectedStatus => this.state.status.find(
+                status => status.name === selectedStatus
+            ).id)
+        })
+    }
+
     render(){
         const { classes } = this.props;
 
@@ -111,8 +144,11 @@ class PostsTable extends Component {
           <div className={classes.root}>
             <PostTableNavBar
                 categories={this.state.categories}
+                status={this.state.status}
                 categoriesSelected={this.state.categoriesSelected}
+                statusSelected={this.state.statusSelected}
                 handleCategoriesChange={this.handleCategoriesChange}
+                handleStatusChange={this.handleStatusChange}
                 fetchPosts={this.fetchPosts}
             />
             {
