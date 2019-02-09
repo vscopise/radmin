@@ -9,6 +9,7 @@ import BlockStyleToolbar, { getBlockStyle } from './blockStyles/BlockStyleToolba
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import { stateToHTML } from "draft-js-export-html";
 
+import * as Constants from '../assets/Constants';
 
 import {
     Button,
@@ -45,7 +46,7 @@ class PostEditor extends Component {
             const excerptContentState = ContentState.createFromBlockArray(processedExcerptHTML);
             //move focus to the end. 
             editorExcerptState = EditorState.createWithContent(excerptContentState);
-            editorExcerptState = EditorState.moveFocusToEnd(editorExcerptState);
+            //editorExcerptState = EditorState.moveFocusToEnd(editorExcerptState);
         }
         else {
             editorExcerptState = EditorState.createEmpty();
@@ -60,6 +61,12 @@ class PostEditor extends Component {
 
             //postTitle: dangerouslySetInnerHTML={ __html: this.props.postContent.title.rendered },
             postTitle: this.props.postContent.title.rendered,
+            status: Constants.status,
+            //statusSelected: [],
+            //statusIdSelected: [],
+            postDate: this.props.postContent.date,
+            postStatus: this.props.postContent.status,
+            postCategories:this.props.postContent.categories
         };
     }
 
@@ -108,6 +115,19 @@ class PostEditor extends Component {
             editorExcerptState,
             editorExcerptHtml: stateToHTML(editorExcerptState.getCurrentContent())
         }); 
+    }
+
+    handleStatusChange = event => {
+        this.setState({
+            postStatus: this.state.status.find(
+                selectedStatus => (selectedStatus.id === event.target.value))
+            .id,
+        })
+    }
+    handleCategoriesChange = event => {
+        this.setState({
+            postCategories: event.target.value
+        })
     }
 
     render() {
@@ -170,18 +190,39 @@ class PostEditor extends Component {
                     <Grid item xs={12} sm={3}>
                         <p>Publicar</p>
                         <FormControl className={classes.sideEditorInput}>
-                            <InputLabel>Estado</InputLabel>
-
                             <Select
-                                value={this.state.age}
-                                onChange={this.handleChange}
+                                //label="Estado"
+                                value={this.state.postStatus}
+                                onChange={this.handleStatusChange}
                             >
-                                <MenuItem value="">
-                                <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                {this.state.status.map(st => (
+                                    <MenuItem key={st.id} value={st.id}>
+                                        {st.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl className={classes.sideEditorInput}>
+                            <TextField
+                                label="Fecha / Hora"
+                                type="datetime-local"
+                                value={this.state.postDate}
+                                
+                            />
+                        </FormControl>
+                            
+                        <FormControl className={classes.sideEditorInput}>
+                            <Select
+                                multiple
+                                value={this.state.postCategories}
+                                onChange={this.handleCategoriesChange}
+                            >
+                                {this.props.categories.map(cat => (
+                                    <MenuItem key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
 

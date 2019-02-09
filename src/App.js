@@ -18,7 +18,9 @@ class App extends Component {
       disableSubmitLogin: true,
       token: false,
       post: false,
-      isLoading: false
+      categories: [],
+      isLoading: false,
+      //loadingCategories: true,
     };
   }
 
@@ -53,14 +55,29 @@ class App extends Component {
     .then(res => res.json())
     .then(data => this.setState({
         token: data.token,
-        isLoading: false,
-    }))
+        //isLoading: false,
+    })).then(this.fetchCategories)
     .catch(error => console.log(error))
   }
 
   fetchPost = (post) => {
     this.setState({ post })
   }
+
+  fetchCategories = () => {
+    fetch(Constants.apiUrl + 'wp/v2/categories?per_page=99', {
+        headers: {
+            authorization: 'Bearer ' + this.state.token,
+        }, 
+      })
+    .then(response => response.json())
+    .then(categories => this.setState({
+        categories: categories,
+        //loadingCategories: false,
+        isLoading: false,
+    }))
+    .catch(error => console.log(error))
+}
 
   handleClose = () => {
     this.setState({
@@ -78,7 +95,12 @@ class App extends Component {
     return (
       <div className={classes.App}>
         {
-          !this.state.token &&
+          (!this.state.token ||
+          this.state.categories.length === 0) &&
+          //this.state.loadingCategories &&
+          //!this.state.isLoading) &&
+          !this.state.post &&
+          //!this.state.isLoading &&
           <SignIn 
             username={this.handleUsername}
             password={this.handlePassword}
@@ -89,10 +111,13 @@ class App extends Component {
         }
         {
           this.state.token &&
+          this.state.categories.length > 0 &&
           !this.state.post &&
+          !this.state.isLoading &&
           <PostsTable 
             token={this.state.token}
             fetchPost={this.fetchPost}
+            categories={this.state.categories}
             handleCategoriesChange={this.handleCategoriesChange}
           />
         }
@@ -102,6 +127,7 @@ class App extends Component {
               postContent={this.state.post}
               postStatuses={this.state.postStatuses}
               handleClose={this.handleClose}
+              categories={this.state.categories}
           />
         }
       </div>

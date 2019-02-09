@@ -20,29 +20,8 @@ class PostsTable extends Component {
         this.state = {
             posts: [],
             users: [],
-            categories: [],
-            status: [
-                {
-                    id: 'publish',
-                    name: 'Publicadas',
-                },
-                {
-                    id: 'future',
-                    name: 'Programadas',
-                },
-                {
-                    id: 'draft',
-                    name: 'Borradores',
-                },
-                {
-                    id: 'pending',
-                    name: 'Pendientes',
-                },
-                {
-                    id: 'private',
-                    name: 'Privadas',
-                },
-            ],
+            categories: props.categories,
+            status: Constants.status,
             categoriesSelected: [],
             statusSelected: [],
             categoriesIdSelected: [],
@@ -57,7 +36,7 @@ class PostsTable extends Component {
 
     componentDidMount() {
         this.fetchUsers();
-        this.fetchCategories();
+        //this.fetchCategories();
         this.fetchPosts();
     }
 
@@ -116,7 +95,7 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-    fetchCategories = () => {
+    /*fetchCategories = () => {
         fetch(Constants.apiUrl + 'wp/v2/categories?per_page=99', {
             headers: {
                 authorization: 'Bearer ' + this.props.token,
@@ -128,7 +107,7 @@ class PostsTable extends Component {
             loadingCategories: false
         }))
         .catch(error => console.log(error))
-    }
+    }*/
 
     handleCategoriesChange = event => {
         this.setState({
@@ -189,14 +168,13 @@ class PostsTable extends Component {
                     </TableHead>
                     {
                         ! ( this.state.loadingPosts ||
-                            this.state.loadingUsers ||
-                            this.state.loadingCategories ) &&
+                            this.state.loadingUsers ) &&
                     <TableBody>
                         {this.state.posts.map(post => (
                             <PostRow 
                                 post={post}
                                 users={this.state.users}
-                                categories={this.state.categories}
+                                categories={this.props.categories}
                                 key={post.id}
                                 handleClick={() => this.props.fetchPost(post)}
                             />
@@ -207,8 +185,8 @@ class PostsTable extends Component {
             }
             {
                 ( this.state.loadingPosts ||
-                this.state.loadingUsers ||
-                this.state.loadingCategories ) &&
+                this.state.loadingUsers ) &&
+                //this.state.loadingCategories ) &&
                 <Loading />
             }
           </div>
