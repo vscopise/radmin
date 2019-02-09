@@ -87,6 +87,10 @@ const styles = theme => ({
         },
       },
     },
+    sideEditorInput: {
+      width: '100%',
+      marginBottom: 20,
+    },
     main: {
       width: 'auto',
       display: 'block', // Fix IE 11 issue.

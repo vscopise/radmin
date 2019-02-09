@@ -100,6 +100,7 @@ class App extends Component {
           this.state.post &&
           <PostEditor 
               postContent={this.state.post}
+              postStatuses={this.state.postStatuses}
               handleClose={this.handleClose}
           />
         }

@@ -5,6 +5,7 @@ import {
     MenuItem,
     withStyles,
     AppBar,
+    TextField,
     Toolbar,
     Select,
     Grid,
@@ -58,7 +59,7 @@ const PostTableNavBar = (props) => {
                                     onChange={props.handleStatusChange}
                                     renderValue={selected => {
                                         if (selected.length === 0) {
-                                        return <em>Todos los estados</em>;
+                                        return <em>Publicadas</em>;
                                         }
                         
                                         return selected.join(', ');
@@ -70,6 +71,22 @@ const PostTableNavBar = (props) => {
                                         </MenuItem>
                                     ))}
                                 </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item>
+                            <FormControl>
+                                <TextField 
+                                    type='date'
+                                    onChange={props.handleAfterDateChange}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item>
+                            <FormControl>
+                                <TextField 
+                                    type='date'
+                                    onChange={props.handleBeforeDateChange}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item>

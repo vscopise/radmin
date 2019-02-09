@@ -50,6 +50,8 @@ class PostsTable extends Component {
             loadingPosts: true,
             loadingUsers: true,
             loadingCategories: true,
+            dateBefore: '',
+            dateAfter: '',
         };
     }
 
@@ -76,8 +78,18 @@ class PostsTable extends Component {
         if (this.state.categoriesIdSelected.length > 0) {
             catToFetch = '&categories=' + this.state.categoriesIdSelected.join(',');
         }
+
+        let dateBeforeToFetch = '';
+        if (this.state.dateBefore !== '') {
+            dateBeforeToFetch = '&before=' + this.state.dateBefore + 'T00:00:00';
+        }
+
+        let dateAfterToFetch = '';
+        if (this.state.dateAfter !== '') {
+            dateAfterToFetch = '&after=' + this.state.dateAfter + 'T00:00:00';
+        }
         
-        fetch(Constants.apiUrl + 'wp/v2/posts/' + statusToFetch + catToFetch, {
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + statusToFetch + catToFetch + dateBeforeToFetch + dateAfterToFetch, {
             headers: new Headers({
                 Authorization: `Bearer ${this.props.token}`
             }),
@@ -135,6 +147,18 @@ class PostsTable extends Component {
             ).id)
         })
     }
+    
+    handleAfterDateChange = event => {
+        this.setState({
+            dateAfter: event.target.value
+        })
+    }
+
+    handleBeforeDateChange = event => {
+        this.setState({
+            dateBefore: event.target.value
+        })
+    }
 
     render(){
         const { classes } = this.props;
@@ -149,6 +173,8 @@ class PostsTable extends Component {
                 handleCategoriesChange={this.handleCategoriesChange}
                 handleStatusChange={this.handleStatusChange}
                 fetchPosts={this.fetchPosts}
+                handleAfterDateChange={this.handleAfterDateChange}
+                handleBeforeDateChange={this.handleBeforeDateChange}
             />
             {
                 ! this.state.post &&

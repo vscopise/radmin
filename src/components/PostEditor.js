@@ -13,8 +13,12 @@ import { stateToHTML } from "draft-js-export-html";
 import {
     Button,
     Grid,
+    InputLabel,
+    MenuItem,
+    Select,
     TextField,
     withStyles,
+    FormControl,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
 
@@ -164,6 +168,23 @@ class PostEditor extends Component {
                         </div>                    
                     </Grid>
                     <Grid item xs={12} sm={3}>
+                        <p>Publicar</p>
+                        <FormControl className={classes.sideEditorInput}>
+                            <InputLabel>Estado</InputLabel>
+
+                            <Select
+                                value={this.state.age}
+                                onChange={this.handleChange}
+                            >
+                                <MenuItem value="">
+                                <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                            </Select>
+                        </FormControl>
+
                         <Button variant="contained" color="primary" onClick={this.props.handleClose}>
                             Cerrar
                         </Button>
