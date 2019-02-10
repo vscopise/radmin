@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     Button,
     FormControl,
@@ -37,18 +37,25 @@ const PostTableNavBar = (props) => {
                                         onChange={props.handleCategoriesChange}
                                         renderValue={selected => {
                                             if (selected.length === 0) {
-                                            return <em>Todas las categorías</em>;
+                                                return <em>Todas las categorías</em>;
                                             }
-                            
-                                            return selected.join(', ');
+                                            return selected.map(
+                                                s => props.categories.find(
+                                                    c => c.id === s
+                                                ).name + ', '
+                                            )
                                         }}
                                     >
                                         {props.categories.map(cat => (
-                                            <MenuItem key={cat.id} value={cat.name}>
+                                            <MenuItem key={cat.id} value={cat.id}>
                                                 {cat.name}
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                }
+                                {
+                                    ! props.categories && 
+                                    <TextField defaultValue='Todas las categorías' />
                                 }
                             </FormControl>
                         </Grid>
@@ -69,7 +76,7 @@ const PostTableNavBar = (props) => {
                                     }}
                                 >
                                     {props.status.map(status => (
-                                        <MenuItem key={status.id} value={status.name}>
+                                        <MenuItem key={status.id} value={status.id}>
                                             {status.name}
                                         </MenuItem>
                                     ))}

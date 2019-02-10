@@ -22,11 +22,14 @@ const PostRow = (props) => {
                     dangerouslySetInnerHTML={{__html: props.post.title.rendered}}
                 />
             </TableCell>
-            <TableCell>
-                {props.users.find(
-                    user => user.id === props.post.author
-                ).name}
-            </TableCell>
+            {
+                props.users &&
+                <TableCell>
+                    {props.users.find(
+                        user => user.id === props.post.author
+                    ).name}
+                </TableCell>
+            }
             {
                 props.categories &&
                 <TableCell>
@@ -43,7 +46,18 @@ const PostRow = (props) => {
                     ))}
                 </TableCell>
             }
-            <TableCell align="right">{props.post.date}</TableCell>
+            <TableCell align="right">
+                {
+                    new Date(props.post.date).toLocaleString(
+                        'es-ES',
+                        { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        }
+                    )
+                }
+            </TableCell>
         </TableRow>
     )   
 }  

@@ -20,10 +20,18 @@ class App extends Component {
       post: false,
       users: false,
       categories: false,
+      categoriesSelected: [],
       status: Constants.status,
+      statusSelected: [],
+      dateBefore: '',
+      dateAfter: '',
       isLoading: false,
+      loadingPosts: false,
+      posts: [],
     };
   }
+
+  
 
   handleUsername = (value) => {
     this.setState({
@@ -66,11 +74,53 @@ class App extends Component {
     }))
     .then( this.fetchUsers )
     .then( this.fetchCategories )
+    .then( this.fetchPosts )
     .catch(error => console.log(error))
   }
 
   fetchPost = (post) => {
     this.setState({ post })
+  }
+
+  fetchPosts = () => {
+      this.setState({
+          loadingPosts: true,
+          posts: [],
+      });
+      
+      let statusToFetch = '';
+      if (this.state.statusSelected.length > 0) {
+          statusToFetch = '?status=' + this.state.statusSelected.join(',');
+      } else {
+          statusToFetch = '?status=publish';
+      }
+      
+      let catToFetch = '';
+      if (this.state.categoriesSelected.length > 0) {
+          catToFetch = '&categories=' + this.state.categoriesSelected.join(',');
+      }
+
+      let dateBeforeToFetch = '';
+      if (this.state.dateBefore !== '') {
+          dateBeforeToFetch = '&before=' + this.state.dateBefore + 'T00:00:00';
+      }
+
+      let dateAfterToFetch = '';
+      if (this.state.dateAfter !== '') {
+          dateAfterToFetch = '&after=' + this.state.dateAfter + 'T00:00:00';
+      }
+      
+      fetch(Constants.apiUrl + 'wp/v2/posts/' + statusToFetch + catToFetch + dateBeforeToFetch + dateAfterToFetch, {
+          headers: new Headers({
+              Authorization: `Bearer ${this.state.token}`
+          }),
+      })   
+      .then(response => response.json())
+      .then(posts => this.setState({
+          posts: posts,
+          loadingPosts: false
+      }))
+      .catch(error => console.log(error))
   }
 
   fetchCategories = () => {
@@ -107,8 +157,28 @@ class App extends Component {
     })
   }
 
-  handleCategoriesChange = (categories) => {
-    
+  handleCategoriesChange = event => {
+    this.setState({
+        categoriesSelected: event.target.value,
+    })
+  }
+
+  handleStatusChange = event => {
+    this.setState({
+        statusSelected: event.target.value,
+    })
+  }
+
+  handleAfterDateChange = event => {
+    this.setState({
+        dateAfter: event.target.value
+    })
+  }
+
+  handleBeforeDateChange = event => {
+      this.setState({
+          dateBefore: event.target.value
+      })
   }
 
   render() {
@@ -134,9 +204,17 @@ class App extends Component {
             token = {this.state.token}
             fetchPost = {this.fetchPost}
             categories = {this.state.categories}
+            categoriesSelected = {this.state.categoriesSelected}
+            handleCategoriesChange = {this.handleCategoriesChange}
             users = {this.state.users}
             status = {this.state.status}
-            handleCategoriesChange = {this.handleCategoriesChange}
+            statusSelected = {this.state.statusSelected}
+            handleStatusChange = {this.handleStatusChange}
+            handleAfterDateChange = {this.handleAfterDateChange}
+            handleBeforeDateChange = {this.handleBeforeDateChange}
+            fetchPosts = {this.fetchPosts}
+            posts = {this.state.posts}
+            loadingPosts = {this.state.loadingPosts}
           />
         }
         {

@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PostRow from './PostRow';
-import * as Constants from '../assets/Constants';
 import PropTypes from 'prop-types';
 import {
     Table,
@@ -14,121 +13,23 @@ import styles from '../styles/Styles';
 import Loading from './Loading';
 import PostTableNavBar from './PostTableNavBar';
 
-class PostsTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            posts: [],
-            users: props.users,
-//            categories: props.categories,
-//            status: Constants.status,
-            categoriesSelected: [],
-            statusSelected: [],
-            categoriesIdSelected: [],
-            statusIdSelected: [],
-            loadingPosts: true,
-            loadingUsers: true,
-            loadingCategories: true,
-            dateBefore: '',
-            dateAfter: '',
-        };
-    }
-
-    componentDidMount() {
-        //this.fetchUsers();
-        this.fetchPosts();
-    }
-
-    fetchPosts = () => {
-        this.setState({
-            loadingPosts: true,
-            posts: [],
-        });
-        
-        let statusToFetch = '';
-        if (this.state.statusIdSelected.length > 0) {
-            statusToFetch = '?status=' + this.state.statusIdSelected.join(',');
-        } else {
-            statusToFetch = '?status=publish';
-        }
-        
-        let catToFetch = '';
-        if (this.state.categoriesIdSelected.length > 0) {
-            catToFetch = '&categories=' + this.state.categoriesIdSelected.join(',');
-        }
-
-        let dateBeforeToFetch = '';
-        if (this.state.dateBefore !== '') {
-            dateBeforeToFetch = '&before=' + this.state.dateBefore + 'T00:00:00';
-        }
-
-        let dateAfterToFetch = '';
-        if (this.state.dateAfter !== '') {
-            dateAfterToFetch = '&after=' + this.state.dateAfter + 'T00:00:00';
-        }
-        
-        fetch(Constants.apiUrl + 'wp/v2/posts/' + statusToFetch + catToFetch + dateBeforeToFetch + dateAfterToFetch, {
-            headers: new Headers({
-                Authorization: `Bearer ${this.props.token}`
-            }),
-        })   
-        .then(response => response.json())
-        .then(posts => this.setState({
-            posts: posts,
-            loadingPosts: false
-        }))
-        .catch(error => console.log(error))
-    }
-
-
-    handleCategoriesChange = event => {
-        this.setState({
-            categoriesSelected: event.target.value,
-            categoriesIdSelected: event.target.value.map(selectedCat => this.props.categories.find(
-                category => category.name === selectedCat
-            ).id)
-        })
-    }
-
-    handleStatusChange = event => {
-        this.setState({
-            statusSelected: event.target.value,
-            statusIdSelected: event.target.value.map(selectedStatus => this.state.status.find(
-                status => status.name === selectedStatus
-            ).id)
-        })
-    }
-    
-    handleAfterDateChange = event => {
-        this.setState({
-            dateAfter: event.target.value
-        })
-    }
-
-    handleBeforeDateChange = event => {
-        this.setState({
-            dateBefore: event.target.value
-        })
-    }
-
-    render(){
-        const { classes } = this.props;
-
-        return (
-          <div className={classes.root}>
+const PostsTable = (props) => {
+    const { classes } = props;
+    return (
+        <div className={classes.root}>
             <PostTableNavBar
-                categories = {this.props.categories}
-                status = {this.props.status}
-                categoriesSelected = {this.state.categoriesSelected}
-                statusSelected={this.state.statusSelected}
-                handleCategoriesChange={this.handleCategoriesChange}
-                handleStatusChange={this.handleStatusChange}
-                fetchPosts={this.fetchPosts}
-                handleAfterDateChange={this.handleAfterDateChange}
-                handleBeforeDateChange={this.handleBeforeDateChange}
+                categories = {props.categories}
+                status = {props.status}
+                categoriesSelected = {props.categoriesSelected}
+                statusSelected={props.statusSelected}
+                handleCategoriesChange={props.handleCategoriesChange}
+                handleStatusChange={props.handleStatusChange}
+                fetchPosts={props.fetchPosts}
+                handleAfterDateChange={props.handleAfterDateChange}
+                handleBeforeDateChange={props.handleBeforeDateChange}
             />
             {
-                ! this.state.post &&
+                ! props.post &&
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
@@ -139,33 +40,27 @@ class PostsTable extends Component {
                         </TableRow>
                     </TableHead>
                     {
-                        /*! ( this.state.loadingPosts ||
-                            this.state.loadingUsers ) && */
-                        ! this.state.loadingPosts &&    
-                    <TableBody>
-                        {this.state.posts.map(post => (
-                            <PostRow 
-                                post={post}
-                                users={this.props.users}
-                                categories={this.props.categories}
-                                key={post.id}
-                                handleClick={() => this.props.fetchPost(post)}
-                            />
-                        ))}
-                    </TableBody>
-                }
+                        props.posts.length > 0 &&    
+                        <TableBody>
+                            {props.posts.map(post => (
+                                <PostRow 
+                                    post={post}
+                                    users={props.users}
+                                    categories={props.categories}
+                                    key={post.id}
+                                    handleClick={() => props.fetchPost(post)}
+                                />
+                            ))}
+                        </TableBody>
+                    }
                 </Table>
             }
             {
-                ( this.state.loadingPosts ||
-                this.state.loadingUsers ) &&
-                //this.state.loadingCategories ) &&
+                props.loadingPosts &&
                 <Loading />
             }
-          </div>
-        );
-    }
-    
+        </div>
+    );
 }
 
 
