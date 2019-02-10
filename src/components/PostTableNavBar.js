@@ -27,26 +27,29 @@ const PostTableNavBar = (props) => {
                     >
                         <Grid item>
                             <FormControl>
-                                <Select
-                                    className={classes.select}
-                                    multiple
-                                    displayEmpty
-                                    value={props.categoriesSelected}
-                                    onChange={props.handleCategoriesChange}
-                                    renderValue={selected => {
-                                        if (selected.length === 0) {
-                                        return <em>Todas las categorías</em>;
-                                        }
-                        
-                                        return selected.join(', ');
-                                    }}
-                                >
-                                    {props.categories.map(cat => (
-                                        <MenuItem key={cat.id} value={cat.name}>
-                                            {cat.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                {
+                                    props.categories &&
+                                    <Select
+                                        className={classes.select}
+                                        multiple
+                                        displayEmpty
+                                        value={props.categoriesSelected}
+                                        onChange={props.handleCategoriesChange}
+                                        renderValue={selected => {
+                                            if (selected.length === 0) {
+                                            return <em>Todas las categorías</em>;
+                                            }
+                            
+                                            return selected.join(', ');
+                                        }}
+                                    >
+                                        {props.categories.map(cat => (
+                                            <MenuItem key={cat.id} value={cat.name}>
+                                                {cat.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                }
                             </FormControl>
                         </Grid>
                         <Grid item>

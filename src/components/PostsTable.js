@@ -19,9 +19,9 @@ class PostsTable extends Component {
         super(props);
         this.state = {
             posts: [],
-            users: [],
-            categories: props.categories,
-            status: Constants.status,
+            users: props.users,
+//            categories: props.categories,
+//            status: Constants.status,
             categoriesSelected: [],
             statusSelected: [],
             categoriesIdSelected: [],
@@ -35,8 +35,7 @@ class PostsTable extends Component {
     }
 
     componentDidMount() {
-        this.fetchUsers();
-        //this.fetchCategories();
+        //this.fetchUsers();
         this.fetchPosts();
     }
 
@@ -81,38 +80,11 @@ class PostsTable extends Component {
         .catch(error => console.log(error))
     }
 
-    fetchUsers = () => {
-        fetch(Constants.apiUrl + 'wp/v2/users?per_page=99', {
-            headers: {
-                authorization: 'Bearer ' + this.props.token,
-            }, 
-          })
-        .then(response => response.json())
-        .then(users => this.setState({
-            users: users,
-            loadingUsers: false
-        }))
-        .catch(error => console.log(error))
-    }
-
-    /*fetchCategories = () => {
-        fetch(Constants.apiUrl + 'wp/v2/categories?per_page=99', {
-            headers: {
-                authorization: 'Bearer ' + this.props.token,
-            }, 
-          })
-        .then(response => response.json())
-        .then(categories => this.setState({
-            categories: categories,
-            loadingCategories: false
-        }))
-        .catch(error => console.log(error))
-    }*/
 
     handleCategoriesChange = event => {
         this.setState({
             categoriesSelected: event.target.value,
-            categoriesIdSelected: event.target.value.map(selectedCat => this.state.categories.find(
+            categoriesIdSelected: event.target.value.map(selectedCat => this.props.categories.find(
                 category => category.name === selectedCat
             ).id)
         })
@@ -145,9 +117,9 @@ class PostsTable extends Component {
         return (
           <div className={classes.root}>
             <PostTableNavBar
-                categories={this.state.categories}
-                status={this.state.status}
-                categoriesSelected={this.state.categoriesSelected}
+                categories = {this.props.categories}
+                status = {this.props.status}
+                categoriesSelected = {this.state.categoriesSelected}
                 statusSelected={this.state.statusSelected}
                 handleCategoriesChange={this.handleCategoriesChange}
                 handleStatusChange={this.handleStatusChange}
@@ -167,13 +139,14 @@ class PostsTable extends Component {
                         </TableRow>
                     </TableHead>
                     {
-                        ! ( this.state.loadingPosts ||
-                            this.state.loadingUsers ) &&
+                        /*! ( this.state.loadingPosts ||
+                            this.state.loadingUsers ) && */
+                        ! this.state.loadingPosts &&    
                     <TableBody>
                         {this.state.posts.map(post => (
                             <PostRow 
                                 post={post}
-                                users={this.state.users}
+                                users={this.props.users}
                                 categories={this.props.categories}
                                 key={post.id}
                                 handleClick={() => this.props.fetchPost(post)}

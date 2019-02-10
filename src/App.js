@@ -18,23 +18,30 @@ class App extends Component {
       disableSubmitLogin: true,
       token: false,
       post: false,
-      categories: [],
+      users: false,
+      categories: false,
+      status: Constants.status,
       isLoading: false,
-      //loadingCategories: true,
     };
   }
 
   handleUsername = (value) => {
     this.setState({
       username: value,
-      disableSubmitLogin: !(this.state.username!=='' && this.state.password!=='')
+      disableSubmitLogin: !(
+          this.state.username !== '' && 
+          this.state.password !== ''
+      )
     })
   }
 
   handlePassword = (value) => {
     this.setState({
       password: value,
-      disableSubmitLogin: !(this.state.username!=='' && this.state.password!=='')
+      disableSubmitLogin: !(
+          this.state.username !== '' && 
+          this.state.password !== ''
+      )
     })
   }
 
@@ -55,8 +62,10 @@ class App extends Component {
     .then(res => res.json())
     .then(data => this.setState({
         token: data.token,
-        //isLoading: false,
-    })).then(this.fetchCategories)
+        isLoading: false,
+    }))
+    .then( this.fetchUsers )
+    .then( this.fetchCategories )
     .catch(error => console.log(error))
   }
 
@@ -72,12 +81,25 @@ class App extends Component {
       })
     .then(response => response.json())
     .then(categories => this.setState({
-        categories: categories,
-        //loadingCategories: false,
+        categories,
         isLoading: false,
     }))
     .catch(error => console.log(error))
-}
+  }
+
+  fetchUsers = () => {
+    fetch(Constants.apiUrl + 'wp/v2/users?per_page=99', {
+        headers: {
+            authorization: 'Bearer ' + this.state.token,
+        }, 
+      })
+    .then(response => response.json())
+    .then(users => this.setState({
+        users,
+    }))
+    .catch(error => console.log(error))
+  }
+
 
   handleClose = () => {
     this.setState({
@@ -95,39 +117,35 @@ class App extends Component {
     return (
       <div className={classes.App}>
         {
-          (!this.state.token ||
-          this.state.categories.length === 0) &&
-          //this.state.loadingCategories &&
-          //!this.state.isLoading) &&
-          !this.state.post &&
-          //!this.state.isLoading &&
+          ( !this.state.token ||
+          this.state.isLoading ) &&
           <SignIn 
-            username={this.handleUsername}
-            password={this.handlePassword}
-            disabled={this.state.disableSubmitLogin}
-            fetchToken={this.fetchToken}
-            isLoading={this.state.isLoading}
+            username = {this.handleUsername}
+            password = {this.handlePassword}
+            disabled = {this.state.disableSubmitLogin}
+            fetchToken = {this.fetchToken}
+            isLoading = {this.state.isLoading}
           />
         }
         {
           this.state.token &&
-          this.state.categories.length > 0 &&
           !this.state.post &&
-          !this.state.isLoading &&
           <PostsTable 
-            token={this.state.token}
-            fetchPost={this.fetchPost}
-            categories={this.state.categories}
-            handleCategoriesChange={this.handleCategoriesChange}
+            token = {this.state.token}
+            fetchPost = {this.fetchPost}
+            categories = {this.state.categories}
+            users = {this.state.users}
+            status = {this.state.status}
+            handleCategoriesChange = {this.handleCategoriesChange}
           />
         }
         {
           this.state.post &&
           <PostEditor 
-              postContent={this.state.post}
-              postStatuses={this.state.postStatuses}
-              handleClose={this.handleClose}
-              categories={this.state.categories}
+              postContent = {this.state.post}
+              postStatuses = {this.state.postStatuses}
+              handleClose = {this.handleClose}
+              categories = {this.state.categories}
           />
         }
       </div>

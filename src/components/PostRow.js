@@ -27,19 +27,22 @@ const PostRow = (props) => {
                     user => user.id === props.post.author
                 ).name}
             </TableCell>
-            <TableCell>
-                {props.post.categories.map(cat => (
-                    <span 
-                        key={cat}
-                        className={'cat'}
-                        dangerouslySetInnerHTML={{
-                            __html: props.categories.find (
-                                        category => category.id === cat
-                                    ).name
-                        }}
-                    />
-                ))}
-            </TableCell>
+            {
+                props.categories &&
+                <TableCell>
+                    {props.post.categories.map(cat => (
+                        <span 
+                            key={cat}
+                            className={'cat'}
+                            dangerouslySetInnerHTML={{
+                                __html: props.categories.find (
+                                            category => category.id === cat
+                                        ).name
+                            }}
+                        />
+                    ))}
+                </TableCell>
+            }
             <TableCell align="right">{props.post.date}</TableCell>
         </TableRow>
     )   
