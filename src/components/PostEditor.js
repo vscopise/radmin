@@ -64,6 +64,7 @@ class PostEditor extends Component {
             status: Constants.status,
             //statusSelected: [],
             //statusIdSelected: [],
+            postId: this.props.postid,
             postDate: this.props.postContent.date,
             postStatus: this.props.postContent.status,
             postCategories:this.props.postContent.categories
@@ -129,6 +130,15 @@ class PostEditor extends Component {
             postCategories: event.target.value
         })
     }
+    handleChangeTitle = event => {
+        this.setState({
+            postTitle: event.target.value
+        })
+    }
+
+    handleUpdatePost = () => {
+
+    }
 
     render() {
         const { classes } = this.props;
@@ -144,6 +154,7 @@ class PostEditor extends Component {
                                 variant='filled'
                                 fullWidth
                                 value={this.state.postTitle}
+                                //onChange={this.handleChangeTitle}
                             />
                         </div>
                         <div className='postItem'>
@@ -152,7 +163,8 @@ class PostEditor extends Component {
                                 label='Título'
                                 variant='filled'
                                 fullWidth
-                                value={this.props.postContent.title.rendered}
+                                value={this.state.postTitle}
+                                onChange={this.handleChangeTitle}
                             />
                         </div>
                         <div className='editorContainer postItem'>
@@ -190,6 +202,7 @@ class PostEditor extends Component {
                     <Grid item xs={12} sm={3}>
                         <p>Publicar</p>
                         <FormControl className={classes.sideEditorInput}>
+                            <InputLabel>Estado</InputLabel>
                             <Select
                                 //label="Estado"
                                 value={this.state.postStatus}
@@ -213,6 +226,7 @@ class PostEditor extends Component {
                         </FormControl>
                             
                         <FormControl className={classes.sideEditorInput}>
+                            <InputLabel>Categoría(s)</InputLabel>
                             <Select
                                 multiple
                                 value={this.state.postCategories}
@@ -225,13 +239,17 @@ class PostEditor extends Component {
                                 ))}
                             </Select>
                         </FormControl>
-
-                        <Button variant="contained" color="primary" onClick={this.props.handleClose}>
-                            Cerrar
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={this.props.handleClose}>
-                            Cerrar
-                        </Button>
+                        <FormControl className={classes.sideEditorInput}>
+                            <Button variant="contained" color="primary" onClick={this.props.handleClose}>
+                                Cerrar
+                            </Button>
+                        </FormControl>
+                        <FormControl className={classes.sideEditorInput}>
+                            <Button variant="contained" color="primary" onClick={this.props.handleUpdatePost}>
+                                Actualizar
+                            </Button>
+                        </FormControl>
+                        
                     </Grid>
                 </Grid>
             </div>
