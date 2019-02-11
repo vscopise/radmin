@@ -91,6 +91,13 @@ const styles = theme => ({
       width: '100%',
       marginBottom: 20,
     },
+    postFeaturedImage: {
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    editorLabel: {
+      textAlign: 'left',
+    },
     main: {
       width: 'auto',
       display: 'block', // Fix IE 11 issue.

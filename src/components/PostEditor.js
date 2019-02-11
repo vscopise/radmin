@@ -20,6 +20,9 @@ import {
     TextField,
     withStyles,
     FormControl,
+    Card,
+    CardContent,
+    Typography,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
 
@@ -34,41 +37,45 @@ class PostEditor extends Component {
             const contentState = ContentState.createFromBlockArray(processedHTML);
             //move focus to the end. 
             editorState = EditorState.createWithContent(contentState);
-            editorState = EditorState.moveFocusToEnd(editorState);
+            //editorState = EditorState.moveFocusToEnd(editorState);
         }
         else {
             editorState = EditorState.createEmpty();
         }
 
-        let editorExcerptState;
-        if (this.props.postContent.excerpt.rendered.trim() !== '') {
-            const processedExcerptHTML = DraftPasteProcessor.processHTML(this.props.postContent.excerpt.rendered);
-            const excerptContentState = ContentState.createFromBlockArray(processedExcerptHTML);
-            //move focus to the end. 
-            editorExcerptState = EditorState.createWithContent(excerptContentState);
-            //editorExcerptState = EditorState.moveFocusToEnd(editorExcerptState);
-        }
-        else {
-            editorExcerptState = EditorState.createEmpty();
-        }
-
         this.state = {
+            
+            token: this.props.token,
+            postId: this.props.postId,
+            postColgado: this.props.postContent.colgado,
+            postTitle: this.props.postContent.title.rendered,
+            postExcerpt: this.props.postContent.excerpt.rendered,
             editorState,
             editorContentHtml: stateToHTML(editorState.getCurrentContent()),
-
-            editorExcerptState,
-            editorExcerptHtml: stateToHTML(editorExcerptState.getCurrentContent()),
-
-            //postTitle: dangerouslySetInnerHTML={ __html: this.props.postContent.title.rendered },
-            postTitle: this.props.postContent.title.rendered,
             status: Constants.status,
-            //statusSelected: [],
-            //statusIdSelected: [],
-            postId: this.props.postid,
-            postDate: this.props.postContent.date,
             postStatus: this.props.postContent.status,
-            postCategories:this.props.postContent.categories
+            postCategories:this.props.postContent.categories,
+            postDate: this.props.postContent.date,
+            processing: false,
         };
+    }
+
+    componentDidMount() {
+        this.fetchFeaturedImage(this.props.postContent.featured_media)
+    }
+
+    fetchFeaturedImage = (imageId) => {
+        fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
+            headers:{
+                'Content-Type': 'application/json',
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + this.state.token
+            }
+        })
+        .then(response => response.json())
+        .then(image => this.setState({
+            postFeaturedImage: image.media_details.sizes.thumbnail.source_url
+        }))        
     }
 
     toggleBlockType = (blockType) => {
@@ -104,46 +111,50 @@ class PostEditor extends Component {
 		this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
 	};
 
-    onChange = (editorState) => {
+    onChange = editorState => {
         this.setState({
             editorState,
             editorContentHtml: stateToHTML(editorState.getCurrentContent())
         }); 
     }
 
-    onExcerptChange = (editorExcerptState) => {
-        this.setState({
-            editorExcerptState,
-            editorExcerptHtml: stateToHTML(editorExcerptState.getCurrentContent())
-        }); 
-    }
-
-    handleStatusChange = event => {
-        this.setState({
-            postStatus: this.state.status.find(
-                selectedStatus => (selectedStatus.id === event.target.value))
-            .id,
-        })
-    }
-    handleCategoriesChange = event => {
-        this.setState({
-            postCategories: event.target.value
-        })
-    }
-    handleChangeTitle = event => {
-        this.setState({
-            postTitle: event.target.value
-        })
+    handleChange = event => {
+        let change = {}
+        change[event.target.name] = event.target.value
+        this.setState(change)
     }
 
     handleUpdatePost = () => {
+        this.setState({processing: true});
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + this.state.postId, {
+            method: 'post',
+            headers:{
+                'Content-Type': 'application/json',
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + this.state.token
+            },
+            body:JSON.stringify({
+                title: this.state.postTitle,
+                content: this.state.editorContentHtml,
+                excerpt: this.state.postExcerpt,
+                status: this.state.postStatus,
+                colgado: this.state.postColgado,
+            })
+        })
+        .then(response => response.json())
+        .then(() => this.setState({
+            processing: false
+        }))
+    }
+
+    handleFeaturedImageClick = () => {
 
     }
 
     render() {
         const { classes } = this.props;
 
-        return(
+        return (
             <div className={classes.postEditor}>
                 <Grid container spacing={24}>
                     <Grid item xs={12} sm={9}>
@@ -153,8 +164,9 @@ class PostEditor extends Component {
                                 label='Colgado'
                                 variant='filled'
                                 fullWidth
-                                value={this.state.postTitle}
-                                //onChange={this.handleChangeTitle}
+                                value={this.state.postColgado}
+                                onChange={this.handleChange}
+                                name='postColgado'
                             />
                         </div>
                         <div className='postItem'>
@@ -164,15 +176,21 @@ class PostEditor extends Component {
                                 variant='filled'
                                 fullWidth
                                 value={this.state.postTitle}
-                                onChange={this.handleChangeTitle}
+                                onChange={this.handleChange}
+                                name='postTitle'
                             />
                         </div>
                         <div className='editorContainer postItem'>
-                            <Editor 
-                                editorState={this.state.editorExcerptState}
-                                onChange= { this.onExcerptChange }
+                            <TextField 
+                                label='Copete'
+                                fullWidth
+                                multiline
+                                value={this.state.postExcerpt}
+                                onChange={this.handleChange}
+                                name='postExcerpt'
                             />
                         </div>
+                        
                         <div className='contentWrap'>
                             <div className='toolbar'>
                                 <BlockStyleToolbar 
@@ -200,56 +218,101 @@ class PostEditor extends Component {
                         </div>                    
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                        <p>Publicar</p>
-                        <FormControl className={classes.sideEditorInput}>
-                            <InputLabel>Estado</InputLabel>
-                            <Select
-                                //label="Estado"
-                                value={this.state.postStatus}
-                                onChange={this.handleStatusChange}
-                            >
-                                {this.state.status.map(st => (
-                                    <MenuItem key={st.id} value={st.id}>
-                                        {st.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl className={classes.sideEditorInput}>
-                            <TextField
-                                label="Fecha / Hora"
-                                type="datetime-local"
-                                value={this.state.postDate}
-                                
-                            />
-                        </FormControl>
-                            
-                        <FormControl className={classes.sideEditorInput}>
-                            <InputLabel>Categoría(s)</InputLabel>
-                            <Select
-                                multiple
-                                value={this.state.postCategories}
-                                onChange={this.handleCategoriesChange}
-                            >
-                                {this.props.categories.map(cat => (
-                                    <MenuItem key={cat.id} value={cat.id}>
-                                        {cat.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl className={classes.sideEditorInput}>
-                            <Button variant="contained" color="primary" onClick={this.props.handleClose}>
-                                Cerrar
-                            </Button>
-                        </FormControl>
-                        <FormControl className={classes.sideEditorInput}>
-                            <Button variant="contained" color="primary" onClick={this.props.handleUpdatePost}>
-                                Actualizar
-                            </Button>
-                        </FormControl>
+                        <Card className={classes.sideEditorInput}>
+                            <CardContent>
+                                <FormControl className={classes.sideEditorInput}>
+                                    <InputLabel>Estado</InputLabel>
+                                    <Select
+                                        value={this.state.postStatus}
+                                        onChange={this.handleChange}
+                                        name='postStatus'
+                                        >
+                                        {this.state.status.map(st => (
+                                            <MenuItem key={st.id} value={st.id}>
+                                                {st.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl className={classes.sideEditorInput}>
+                                    <TextField
+                                        label="Fecha / Hora"
+                                        type="datetime-local"
+                                        value={this.state.postDate}
+                                    />
+                                </FormControl>
+                                <FormControl className={classes.sideEditorInput}>
+                                    <InputLabel>Categoría(s)</InputLabel>
+                                    <Select
+                                        multiple
+                                        value={this.state.postCategories}
+                                        onChange={this.handleChange}
+                                        name='postCategories'
+                                    >
+                                        {this.props.categories.map(cat => (
+                                            <MenuItem key={cat.id} value={cat.id}>
+                                                {cat.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </CardContent>
+                        </Card>
                         
+                        <Card className={classes.postFeaturedImage}>
+                            {
+                                this.state.postFeaturedImage &&
+                                <CardContent
+                                    onClick={this.handleFeaturedImageClick}
+                                >
+                                    <Typography 
+                                        className={classes.editorLabel}
+                                        color="textSecondary" gutterBottom>
+                                        Imagen destacada
+                                    </Typography>
+                                    <img src={this.state.postFeaturedImage} alt='' />
+
+                                </CardContent>
+                            }
+                            {
+                                !this.state.postFeaturedImage &&
+                                <CardContent>
+                                    <Typography 
+                                        className={classes.editorLabel}
+                                        color="textSecondary" gutterBottom>
+                                        Cargando imagen destacada...
+                                    </Typography>
+                                </CardContent>
+                            }
+                        </Card>
+                        <Card className={classes.sideEditorInput}>
+                            <CardContent>
+                                <FormControl className={classes.sideEditorInput}>
+                                    <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        onClick={this.props.handleClose}
+                                        disabled={this.state.processing}
+                                    >
+                                        Cerrar
+                                    </Button>
+                                </FormControl>
+                                <FormControl className={classes.sideEditorInput}>
+                                    <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        onClick={this.handleUpdatePost}
+                                        disabled={this.state.processing}
+                                    >
+                                        Actualizar
+                                    </Button>
+                                </FormControl>
+                                {
+                                    this.state.processing &&
+                                    <p>Procesando...</p>
+                                }
+                            </CardContent>
+                        </Card>
                     </Grid>
                 </Grid>
             </div>

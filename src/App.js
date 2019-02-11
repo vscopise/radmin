@@ -31,8 +31,6 @@ class App extends Component {
     };
   }
 
-  
-
   handleUsername = (value) => {
     this.setState({
       username: value,
@@ -220,8 +218,9 @@ class App extends Component {
         {
           this.state.post &&
           <PostEditor 
+              token = {this.state.token}
+              postId = {this.state.post.id}
               postContent = {this.state.post}
-              postStatuses = {this.state.postStatuses}
               handleClose = {this.handleClose}
               categories = {this.state.categories}
           />
