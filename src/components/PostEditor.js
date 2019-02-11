@@ -65,13 +65,22 @@ class PostEditor extends Component {
     }
 
     fetchFeaturedImage = (imageId) => {
-        fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
+        const response = fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
             headers:{
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
                 'Authorization': 'Bearer ' + this.state.token
             }
         })
+        /*if (response.status >= 400) {
+            this.setState({errorStatus: 'Error fetching image'});
+        } else {
+            response.json().then(image => {
+                this.setState({
+                    postFeaturedImage: image.media_details.sizes.thumbnail.source_url
+                })
+            });
+        }*/
         .then(response => response.json())
         .then(image => this.setState({
             postFeaturedImage: image.media_details.sizes.thumbnail.source_url
@@ -290,14 +299,14 @@ class PostEditor extends Component {
                                 <FormControl className={classes.sideEditorInput}>
                                     <Button 
                                         variant="contained" 
-                                        color="primary" 
+                                        color="default" 
                                         onClick={this.props.handleClose}
                                         disabled={this.state.processing}
                                     >
                                         Cerrar
                                     </Button>
                                 </FormControl>
-                                <FormControl className={classes.sideEditorInput}>
+                                <FormControl className={classes.sideEditorInputLast}>
                                     <Button 
                                         variant="contained" 
                                         color="primary" 

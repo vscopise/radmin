@@ -34,7 +34,8 @@ const PostTableNavBar = (props) => {
                                         multiple
                                         displayEmpty
                                         value={props.categoriesSelected}
-                                        onChange={props.handleCategoriesChange}
+                                        onChange={props.handleChange}
+                                        name='categoriesSelected'
                                         renderValue={selected => {
                                             if (selected.length === 0) {
                                                 return <em>Todas las categorías</em>;
@@ -61,12 +62,48 @@ const PostTableNavBar = (props) => {
                         </Grid>
                         <Grid item>
                             <FormControl>
+                                {
+                                    props.tags &&
+                                    <Select
+                                        className={classes.select}
+                                        multiple
+                                        displayEmpty
+                                        value={props.tagsSelected}
+                                        onChange={props.handleChange}
+                                        name='tagsSelected'
+                                        renderValue={selected => {
+                                            if (selected.length === 0) {
+                                                return <em>Todas las etiquetas</em>;
+                                            }
+                                            return selected.map(
+                                                s => props.tags.find(
+                                                    t => t.id === s
+                                                ).name + ', '
+                                            )
+                                        }}
+                                    >
+                                        {props.tags.map(tag => (
+                                            <MenuItem key={tag.id} value={tag.id}>
+                                                {tag.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                }
+                                {
+                                    ! props.tags && 
+                                    <TextField defaultValue='Todas las etiquetas' />
+                                }
+                            </FormControl>
+                        </Grid>
+                        <Grid item>
+                            <FormControl>
                                 <Select
                                     className={classes.select}
                                     multiple
                                     displayEmpty
                                     value={props.statusSelected}
-                                    onChange={props.handleStatusChange}
+                                    onChange={props.handleChange}
+                                    name='statusSelected'
                                     renderValue={selected => {
                                         if (selected.length === 0) {
                                         return <em>Publicadas</em>;
@@ -87,7 +124,8 @@ const PostTableNavBar = (props) => {
                             <FormControl>
                                 <TextField 
                                     type='date'
-                                    onChange={props.handleAfterDateChange}
+                                    onChange={props.handleChange}
+                                    name='dateAfter'
                                 />
                             </FormControl>
                         </Grid>
@@ -95,7 +133,8 @@ const PostTableNavBar = (props) => {
                             <FormControl>
                                 <TextField 
                                     type='date'
-                                    onChange={props.handleBeforeDateChange}
+                                    onChange={props.handleChange}
+                                    name='dateBefore'
                                 />
                             </FormControl>
                         </Grid>

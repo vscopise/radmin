@@ -91,6 +91,9 @@ const styles = theme => ({
       width: '100%',
       marginBottom: 20,
     },
+    sideEditorInputLast: {
+      width: '100%',
+    },
     postFeaturedImage: {
       textAlign: 'center',
       marginBottom: 20,
