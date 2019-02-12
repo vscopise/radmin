@@ -25,6 +25,8 @@ import {
     Typography,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
+import PostBox from './PostBox';
+import PostBoxSelect from './PostBoxSelect';
 
 
 class PostEditor extends Component {
@@ -57,6 +59,9 @@ class PostEditor extends Component {
             postCategories:this.props.postContent.categories,
             postDate: this.props.postContent.date,
             processing: false,
+            loading: false,
+            messageImage: '',
+            messagePost: '',
         };
     }
 
@@ -65,26 +70,37 @@ class PostEditor extends Component {
     }
 
     fetchFeaturedImage = (imageId) => {
-        const response = fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
+        this.setState({
+            messageImage: 'Cargando...'
+        });
+        fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
             headers:{
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
                 'Authorization': 'Bearer ' + this.state.token
             }
         })
-        /*if (response.status >= 400) {
-            this.setState({errorStatus: 'Error fetching image'});
-        } else {
-            response.json().then(image => {
+        .then((response) => {
+            if(response.ok) {
+                response.json().then(image => {
+                    this.setState({
+                        postFeaturedImage: image.media_details.sizes.thumbnail.source_url,
+                        messageImage: '',
+                    })
+                });
+            } else {
                 this.setState({
-                    postFeaturedImage: image.media_details.sizes.thumbnail.source_url
-                })
+                    messageImage: 'Error cargando la imagen'
+                });
+              //console.log('ack failed', response.statusText)
+            }
+          })
+          .catch((ex) => {
+            this.setState({
+                messageImage: 'Error cargando la imagen'
             });
-        }*/
-        .then(response => response.json())
-        .then(image => this.setState({
-            postFeaturedImage: image.media_details.sizes.thumbnail.source_url
-        }))        
+            //throw new Error('fetch failed' + ex)
+          });
     }
 
     toggleBlockType = (blockType) => {
@@ -134,7 +150,10 @@ class PostEditor extends Component {
     }
 
     handleUpdatePost = () => {
-        this.setState({processing: true});
+        this.setState({
+            processing: true,
+            messagePost: 'Procesando...'
+        });
         fetch(Constants.apiUrl + 'wp/v2/posts/' + this.state.postId, {
             method: 'post',
             headers:{
@@ -152,7 +171,8 @@ class PostEditor extends Component {
         })
         .then(response => response.json())
         .then(() => this.setState({
-            processing: false
+            processing: false,
+            messagePost: 'Artículo guardado correctamente'
         }))
     }
 
@@ -229,99 +249,65 @@ class PostEditor extends Component {
                     <Grid item xs={12} sm={3}>
                         <Card className={classes.sideEditorInput}>
                             <CardContent>
-                                <FormControl className={classes.sideEditorInput}>
-                                    <InputLabel>Estado</InputLabel>
-                                    <Select
-                                        value={this.state.postStatus}
-                                        onChange={this.handleChange}
-                                        name='postStatus'
-                                        >
-                                        {this.state.status.map(st => (
-                                            <MenuItem key={st.id} value={st.id}>
-                                                {st.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <FormControl className={classes.sideEditorInput}>
-                                    <TextField
-                                        label="Fecha / Hora"
-                                        type="datetime-local"
-                                        value={this.state.postDate}
-                                    />
-                                </FormControl>
-                                <FormControl className={classes.sideEditorInput}>
-                                    <InputLabel>Categoría(s)</InputLabel>
-                                    <Select
-                                        multiple
-                                        value={this.state.postCategories}
-                                        onChange={this.handleChange}
-                                        name='postCategories'
-                                    >
-                                        {this.props.categories.map(cat => (
-                                            <MenuItem key={cat.id} value={cat.id}>
-                                                {cat.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </CardContent>
-                        </Card>
-                        
-                        <Card className={classes.postFeaturedImage}>
-                            {
-                                this.state.postFeaturedImage &&
-                                <CardContent
-                                    onClick={this.handleFeaturedImageClick}
+                                <InputLabel>Estado</InputLabel>
+                                <Select
+                                    className={classes.sideEditorInput}
+                                    value={this.state.postStatus}
+                                    onChange={this.handleChange}
+                                    name='postStatus'
                                 >
-                                    <Typography 
-                                        className={classes.editorLabel}
-                                        color="textSecondary" gutterBottom>
-                                        Imagen destacada
-                                    </Typography>
-                                    <img src={this.state.postFeaturedImage} alt='' />
-
-                                </CardContent>
-                            }
-                            {
-                                !this.state.postFeaturedImage &&
-                                <CardContent>
-                                    <Typography 
-                                        className={classes.editorLabel}
-                                        color="textSecondary" gutterBottom>
-                                        Cargando imagen destacada...
-                                    </Typography>
-                                </CardContent>
-                            }
-                        </Card>
-                        <Card className={classes.sideEditorInput}>
-                            <CardContent>
-                                <FormControl className={classes.sideEditorInput}>
-                                    <Button 
-                                        variant="contained" 
-                                        color="default" 
-                                        onClick={this.props.handleClose}
-                                        disabled={this.state.processing}
-                                    >
-                                        Cerrar
-                                    </Button>
-                                </FormControl>
-                                <FormControl className={classes.sideEditorInputLast}>
-                                    <Button 
-                                        variant="contained" 
-                                        color="primary" 
-                                        onClick={this.handleUpdatePost}
-                                        disabled={this.state.processing}
-                                    >
-                                        Actualizar
-                                    </Button>
-                                </FormControl>
-                                {
-                                    this.state.processing &&
-                                    <p>Procesando...</p>
-                                }
+                                    {this.state.status.map(st => (
+                                        <MenuItem key={st.id} value={st.id}>
+                                            {st.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <TextField
+                                    className={classes.sideEditorInput}
+                                    label="Fecha / Hora"
+                                    type="datetime-local"
+                                    value={this.state.postDate}
+                                />
+                                <PostBoxSelect
+                                    title='Categoría(s)'
+                                    multiple={true}
+                                    value={this.state.postCategories}
+                                    onChange={this.handleChange}
+                                    name='postCategories'
+                                    items={this.props.categories}
+                                />
+                                <InputLabel>Categoría(s)</InputLabel>
+                                <Select
+                                    className={classes.sideEditorInput}
+                                    multiple
+                                    value={this.state.postCategories}
+                                    onChange={this.handleChange}
+                                    name='postCategories'
+                                >
+                                    {this.props.categories.map(cat => (
+                                        <MenuItem key={cat.id} value={cat.id}>
+                                            {cat.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
                             </CardContent>
                         </Card>
+
+                        <PostBox
+                            postFeaturedImage={this.state.postFeaturedImage}
+                            handleFeaturedImageClick={this.handleFeaturedImageClick}
+                            loading={this.state.loading}
+                            message={this.state.messageImage}
+                            title='Imagen destacada'
+                        />
+
+                        <PostBox 
+                            onClick1={this.props.handleClose}
+                            onClick2={this.handleUpdatePost}
+                            disabledButtons={this.state.processing}
+                            message={this.state.messagePost}
+                        />
+                        
                     </Grid>
                 </Grid>
             </div>

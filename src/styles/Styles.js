@@ -1,3 +1,5 @@
+import { red } from "@material-ui/core/colors";
+
 const styles = theme => ({
     App: {
       backgroundColor: '#fafafa',
@@ -94,13 +96,30 @@ const styles = theme => ({
     sideEditorInputLast: {
       width: '100%',
     },
+    postBox: {
+      marginBottom: 20,
+      textAlign: 'center', 
+      '& .label': {
+        textAlign: 'left',
+        marginBottom: 0,
+      },
+      '& .secondary': {
+        marginTop: 20,
+      },
+      '& .button': {
+        width: '100%',
+      },
+      '& .button1': {
+        marginBottom: 20,
+      },
+      '& .button2': {
+      },
+    },
     postFeaturedImage: {
       textAlign: 'center',
       marginBottom: 20,
     },
-    editorLabel: {
-      textAlign: 'left',
-    },
+    
     main: {
       width: 'auto',
       display: 'block', // Fix IE 11 issue.
