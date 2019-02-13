@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {
-    InputLabel,
-    MenuItem,
-    Select,
+    Grid,
     withStyles,
 } from '@material-ui/core';
 
@@ -13,10 +11,15 @@ const MediaLibrary = (props) => {
     const { classes } = props;
 
     return (
-        <Fragment>
-            <InputLabel>MediaLibrary</InputLabel>
-            
-        </Fragment>
+        <Grid container spacing={24}>
+        {
+            props.mediaItems.map(item =>(
+                <Grid item key={item.id}>
+                    <img src={item.media_details.sizes.thumbnail.source_url} />
+                </Grid>
+            ))
+        }
+        </Grid>
     );
 }
     

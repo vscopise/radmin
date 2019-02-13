@@ -66,41 +66,7 @@ class PostEditor extends Component {
     }
 
     componentDidMount() {
-        this.fetchFeaturedImage(this.props.postContent.featured_media)
-    }
-
-    fetchFeaturedImage = (imageId) => {
-        this.setState({
-            messageImage: 'Cargando...'
-        });
-        fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
-            headers:{
-                'Content-Type': 'application/json',
-                'accept': 'application/json',
-                'Authorization': 'Bearer ' + this.state.token
-            }
-        })
-        .then((response) => {
-            if(response.ok) {
-                response.json().then(image => {
-                    this.setState({
-                        postFeaturedImage: image.media_details.sizes.thumbnail.source_url,
-                        messageImage: '',
-                    })
-                });
-            } else {
-                this.setState({
-                    messageImage: 'Error cargando la imagen'
-                });
-              //console.log('ack failed', response.statusText)
-            }
-          })
-          .catch((ex) => {
-            this.setState({
-                messageImage: 'Error cargando la imagen'
-            });
-            //throw new Error('fetch failed' + ex)
-          });
+        //this.fetchFeaturedImage(this.props.postContent.featured_media)
     }
 
     toggleBlockType = (blockType) => {
@@ -273,7 +239,7 @@ class PostEditor extends Component {
                         </Card>
 
                         <PostBox
-                            postFeaturedImage={this.state.postFeaturedImage}
+                            postFeaturedImage={this.props.postFeaturedImage}
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
                             loading={this.state.loading}
                             message={this.state.messageImage}

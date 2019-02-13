@@ -19,18 +19,19 @@ class App extends Component {
       disableSubmitLogin: true,
       token: false,
       post: false,
-      users: false,
+      postFeaturedImage: false,
+      posts: [],
       categories: false,
       categoriesSelected: [],
       tags: false,
       tagsSelected: [],
+      users: false,
       status: Constants.status,
       statusSelected: [],
       dateBefore: '',
       dateAfter: '',
       isLoading: false,
       loadingPosts: false,
-      posts: [],
     };
   }
 
@@ -81,8 +82,40 @@ class App extends Component {
     .catch(error => console.log(error))
   }
 
-  fetchPost = (post) => {
-    this.setState({ post })
+  fetchPost = (post) => { 
+      this.setState({ post })
+      this.fetchFeaturedImage(post.featured_media)
+  }
+
+  fetchFeaturedImage = (imageId) => {
+      this.setState({ isLoading: true })
+      fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
+          headers:{
+              'Content-Type': 'application/json',
+              'accept': 'application/json',
+              'Authorization': 'Bearer ' + this.state.token
+          }
+      })
+      .then((response) => {
+          if(response.ok) {
+              response.json().then(image => {
+                  this.setState({
+                      postFeaturedImage: image.media_details.sizes.thumbnail.source_url,
+                      isLoading: false,
+                  })
+              });
+          } else {
+              this.setState({
+                  messageImage: 'Error cargando la imagen',
+                  isLoading: false,
+              });
+          }
+      })
+      .catch((ex) => {
+        this.setState({
+            messageImage: 'Error cargando la imagen'
+        });
+      });
   }
 
   fetchPosts = () => {
@@ -248,15 +281,15 @@ class App extends Component {
           !this.state.showMediaLibrary &&
           <PostEditor 
               token = {this.state.token}
-              postId = {this.state.post.id}
+              postFeaturedImage = {this.state.postFeaturedImage}
               postContent = {this.state.post}
               handleClose = {this.handleClose}
               categories = {this.state.categories}
               handleShowMediaLibrary = {this.handleShowMediaLibrary}
+              isLoading = {this.state.isLoading}
           />
         }
         {
-          //!this.state.post &&
           this.state.showMediaLibrary &&
           <MediaLibrary
               mediaItems={this.state.mediaItems}
