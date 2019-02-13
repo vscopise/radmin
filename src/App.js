@@ -8,6 +8,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import styles from './styles/Styles';
+import MediaLibrary from './components/MediaLibrary';
 
 class App extends Component {
   constructor(props) {
@@ -76,6 +77,7 @@ class App extends Component {
     .then( this.fetchCategories )
     .then( this.fetchTags )
     .then( this.fetchPosts )
+    .then( this.fetchMediaItems )
     .catch(error => console.log(error))
   }
 
@@ -170,6 +172,19 @@ class App extends Component {
     .catch(error => console.log(error))
   }
 
+  fetchMediaItems = () => {
+    fetch(Constants.apiUrl + 'wp/v2/media', {
+        headers: {
+            authorization: 'Bearer ' + this.state.token,
+        }, 
+      })
+    .then(response => response.json())
+    .then(mediaItems => this.setState({
+        mediaItems
+    }))
+    .catch(error => console.log(error))
+  }
+
   handleClose = () => {
     this.setState({
         post: false
@@ -180,6 +195,12 @@ class App extends Component {
     let change = {}
     change[event.target.name] = event.target.value
     this.setState(change)
+  }
+
+  handleShowMediaLibrary = () => {
+      this.setState({
+          showMediaLibrary: true
+      })
   }
 
   render() {
@@ -224,12 +245,21 @@ class App extends Component {
         }
         {
           this.state.post &&
+          !this.state.showMediaLibrary &&
           <PostEditor 
               token = {this.state.token}
               postId = {this.state.post.id}
               postContent = {this.state.post}
               handleClose = {this.handleClose}
               categories = {this.state.categories}
+              handleShowMediaLibrary = {this.handleShowMediaLibrary}
+          />
+        }
+        {
+          //!this.state.post &&
+          this.state.showMediaLibrary &&
+          <MediaLibrary
+              mediaItems={this.state.mediaItems}
           />
         }
       </div>

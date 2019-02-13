@@ -19,16 +19,18 @@ const PostBoxSelect = (props) => {
                 className={classes.sideEditorInput}
                 multiple={props.multiple}
                 value={props.value}
-                onChange={(e) => props.handleChange}
+                onChange={props.handleChange}
                 name={props.name}
             >
                 {props.items.map(item => (
-                    <MenuItem key={item.id} value={item.id}>
+                    <MenuItem 
+                        key={item.id} 
+                        value={item.id}
+                    >
                         {item.name}
                     </MenuItem>
                 ))}
             </Select>
-
         </Fragment>
     );
 }

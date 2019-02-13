@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
     Button,
     withStyles,
@@ -8,7 +7,6 @@ import {
 import styles from '../styles/Styles';
 
 const PostBoxButton = (props) => {
-    const { classes } = props;
 
     return (
         <Button 
@@ -22,10 +20,6 @@ const PostBoxButton = (props) => {
         </Button>
     );
 }
-    
-PostBoxButton.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
       
 export default withStyles(styles)(PostBoxButton);
     

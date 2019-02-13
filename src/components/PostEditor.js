@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     ContentState, 
     Editor, 
@@ -176,10 +176,6 @@ class PostEditor extends Component {
         }))
     }
 
-    handleFeaturedImageClick = () => {
-
-    }
-
     render() {
         const { classes } = this.props;
 
@@ -249,19 +245,16 @@ class PostEditor extends Component {
                     <Grid item xs={12} sm={3}>
                         <Card className={classes.sideEditorInput}>
                             <CardContent>
-                                <InputLabel>Estado</InputLabel>
-                                <Select
-                                    className={classes.sideEditorInput}
+
+                                <PostBoxSelect
+                                    title='Estado'
+                                    multiple={false}
                                     value={this.state.postStatus}
-                                    onChange={this.handleChange}
+                                    handleChange={this.handleChange}
                                     name='postStatus'
-                                >
-                                    {this.state.status.map(st => (
-                                        <MenuItem key={st.id} value={st.id}>
-                                            {st.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                    items={this.state.status}
+                                />
+
                                 <TextField
                                     className={classes.sideEditorInput}
                                     label="Fecha / Hora"
@@ -272,24 +265,10 @@ class PostEditor extends Component {
                                     title='Categoría(s)'
                                     multiple={true}
                                     value={this.state.postCategories}
-                                    onChange={this.handleChange}
+                                    handleChange={this.handleChange}
                                     name='postCategories'
                                     items={this.props.categories}
                                 />
-                                <InputLabel>Categoría(s)</InputLabel>
-                                <Select
-                                    className={classes.sideEditorInput}
-                                    multiple
-                                    value={this.state.postCategories}
-                                    onChange={this.handleChange}
-                                    name='postCategories'
-                                >
-                                    {this.props.categories.map(cat => (
-                                        <MenuItem key={cat.id} value={cat.id}>
-                                            {cat.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
                             </CardContent>
                         </Card>
 
@@ -298,6 +277,7 @@ class PostEditor extends Component {
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
                             loading={this.state.loading}
                             message={this.state.messageImage}
+                            onClick1={this.props.handleShowMediaLibrary}
                             title='Imagen destacada'
                         />
 
