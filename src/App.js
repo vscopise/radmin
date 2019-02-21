@@ -239,7 +239,17 @@ class App extends Component {
       })
   }
 
+  handleMediaClose = () => {
+    this.setState({
+      showMediaLibrary: false,
+    });
+  }
 
+  handleMediaSelect = () => {
+    this.setState({
+      
+    })
+  }
 
   render() {
     const { classes } = this.props;
@@ -301,6 +311,8 @@ class App extends Component {
           this.state.showMediaLibrary &&
           <MediaLibrary
               mediaItems={this.state.mediaItems}
+              handleMediaClose={this.handleMediaClose}
+              handleMediaSelect={this.handleMediaSelect}
           />
         }
       </div>

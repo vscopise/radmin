@@ -165,9 +165,40 @@ class PostEditor extends Component {
                         />
 
                     </Grid>
-                    <Grid item xs={12} sm={3}>
-                    <PostEditorSide />
+                        <Grid item xs={12} sm={3}>
+                            <PostEditorSide
+                                postStatus={this.state.postStatus}
+                                status={this.props.status}
+                                postCategories={this.state.postCategories}
+                                categories={this.props.categories}
+                                handleChange={this.handleChange}
+                                postDate={this.state.postDate}
+                                postFeaturedImage={this.props.postFeaturedImage}
+                                handleFeaturedImageClick={this.handleFeaturedImageClick}
+                                loading={this.state.loading}
+                                message={this.state.messageImage}
+                                onClick1={this.props.handleShowMediaLibrary}
+                                onClick2={this.handleUpdatePost}
+                            />
+
+                        <PostBoxSelect
+                            title='Estado'
+                            multiple={false}
+                            value={this.state.postStatus}
+                            handleChange={this.handleChange}
+                            name='postStatus'
+                            items={this.props.status}
+                        />
                         
+                        <PostBoxSelect
+                            title='Categoría(s)'
+                            multiple={true}
+                            value={this.state.postCategories}
+                            handleChange={this.handleChange}
+                            name='postCategories'
+                            items={this.props.categories}
+                        />
+
                         <PostBox
                             postFeaturedImage={this.props.postFeaturedImage}
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
