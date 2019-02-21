@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+    Button,
     Card,
     CardContent,
     Typography,
@@ -8,7 +9,21 @@ import {
 } from '@material-ui/core';
 
 import styles from '../styles/Styles';
-import PostBoxButton from './PostBoxButton';
+//import PostBoxButton from './PostBoxButton';
+
+const PostBoxButton = (props) => {
+    return (
+        <Button 
+            className={props.primary ? 'button' : 'button button1'}
+            variant="contained" 
+            color={props.primary ? 'primary' : 'default'}
+            onClick={props.onClick}
+            disabled={props.disabled}
+        >
+            {props.label}
+        </Button>
+    );
+}
 
 const PostBox = (props) => {
     const { classes } = props;

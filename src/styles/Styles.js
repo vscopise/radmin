@@ -89,6 +89,74 @@ const styles = theme => ({
         },
       },
     },
+
+    richEditorRoot: {
+      background: '#fff',
+      //border: '1px solid #ddd',
+      fontFamily: '"Georgia", serif',
+      fontSize: 14,
+      padding: 15,
+      '& .RichEditor-editor': {
+        borderTop: '1px solid #ddd',
+        cursor: 'text',
+        fontSize: 16,
+        marginTop: 10,
+        paddingTop: 15,
+        '& .public-DraftEditorPlaceholder-root': {
+          margin: '0 -15px -15px',
+          padding: 15
+        },
+        '& .public-DraftEditor-content': {
+          margin: '0 -15px -15px',
+          padding: 15
+        },
+        '& .public-DraftEditor-content': {
+           minHeight: 100,
+         },
+      },
+      '& .RichEditor-editor .RichEditor-blockquote': {
+        borderLeft: '5px solid #eee',
+        color: '#666',
+        fontFamily: '"Hoefler Text", "Georgia", serif',
+        fontStyle: 'italic',
+        margin: '16px 0',
+        padding: '10px 20px',
+      },
+      '& .RichEditor-controls': {
+        fontFamily: '"Helvetica", sans-serif',
+        fontSize: 14,
+        marginBottom: 5,
+        userSelect: 'none',
+        '& .RichEditor-styleButton': {
+          color: '#999',
+          cursor: 'pointer',
+          marginRight: 16,
+          padding: '2px 0',
+          display: 'inline-block',
+        },
+        '& .RichEditor-activeButton': {
+          color: '#5890ff',
+        }         
+      },
+
+/*
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+  display: none;
+}
+
+
+.RichEditor-editor .public-DraftStyleDefault-pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+  font-size: 16px;
+  padding: 20px;
+}
+
+*/
+    },
+
+
+
     sideEditorInput: {
       width: '100%',
       marginBottom: 20,

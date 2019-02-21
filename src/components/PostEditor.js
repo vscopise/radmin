@@ -1,11 +1,17 @@
 import React, { Component, Fragment } from 'react';
+
+//import TimePicker from 'react-time-picker';
+//import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
+
+
 import {
     ContentState, 
     Editor, 
     EditorState, 
     RichUtils, 
 } from 'draft-js';
-import BlockStyleToolbar, { getBlockStyle } from './blockStyles/BlockStyleToolbar';
+import RichEditor from './RichEditor';
+//import BlockStyleToolbar, { getBlockStyle } from './blockStyles/BlockStyleToolbar';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import { stateToHTML } from "draft-js-export-html";
 
@@ -27,6 +33,7 @@ import {
 import styles from '../styles/Styles';
 import PostBox from './PostBox';
 import PostBoxSelect from './PostBoxSelect';
+import PostEditorSide from './PostEditorSide';
 
 
 class PostEditor extends Component {
@@ -34,8 +41,8 @@ class PostEditor extends Component {
     constructor(props) {
         super(props);
         let editorState;
-        if (this.props.postContent.content.rendered.trim() !== '') {
-            const processedHTML = DraftPasteProcessor.processHTML(this.props.postContent.content.rendered);
+        if (this.props.post.content.rendered.trim() !== '') {
+            const processedHTML = DraftPasteProcessor.processHTML(this.props.post.content.rendered);
             const contentState = ContentState.createFromBlockArray(processedHTML);
             //move focus to the end. 
             editorState = EditorState.createWithContent(contentState);
@@ -47,17 +54,17 @@ class PostEditor extends Component {
 
         this.state = {
             
-            token: this.props.token,
-            postId: this.props.postId,
-            postColgado: this.props.postContent.colgado,
-            postTitle: this.props.postContent.title.rendered,
-            postExcerpt: this.props.postContent.excerpt.rendered,
+            //token: this.props.token,
+            //postId: this.props.postId,
+            postColgado: this.props.post.colgado,
+            postTitle: this.props.post.title.rendered,
+            postExcerpt: this.props.post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
             editorState,
             editorContentHtml: stateToHTML(editorState.getCurrentContent()),
-            status: Constants.status,
-            postStatus: this.props.postContent.status,
-            postCategories:this.props.postContent.categories,
-            postDate: this.props.postContent.date,
+            //status: Constants.status,
+            postStatus: this.props.post.status,
+            postCategories:this.props.post.categories,
+            postDate: this.props.post.date,
             processing: false,
             loading: false,
             messageImage: '',
@@ -65,54 +72,21 @@ class PostEditor extends Component {
         };
     }
 
-    componentDidMount() {
-        //this.fetchFeaturedImage(this.props.postContent.featured_media)
-    }
-
-    toggleBlockType = (blockType) => {
-        this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
-    }
-
-    handleKeyCommand = (command) => {
-        const newState = RichUtils.handleKeyCommand(this.state.editorState, command)
-        if (newState) {
-            this.onChange(newState);
-            return 'handled';
-        }
-        return 'not-handled';
-    }
-    
-	onUnderlineClick = () => {
-		this.onChange(
-			RichUtils.toggleInlineStyle(this.state.editorState, "UNDERLINE")
-		);
-	};
-
-	onBoldClick = event => {
-		this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
-	};
-
-	onItalicClick = () => {
-		this.onChange(
-			RichUtils.toggleInlineStyle(this.state.editorState, "ITALIC")
-		);
-	};
-
-	toggleBlockType = blockType => {
-		this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
-	};
-
-    onChange = editorState => {
-        this.setState({
-            editorState,
-            editorContentHtml: stateToHTML(editorState.getCurrentContent())
-        }); 
-    }
-
     handleChange = event => {
         let change = {}
         change[event.target.name] = event.target.value
         this.setState(change)
+    }
+    
+    handleDateChange = date => {
+        this.setState({ selectedDate: date });
+    };
+
+    onContentChange = editorState => {
+        this.setState({
+            editorState,
+            editorContentHtml: stateToHTML(editorState.getCurrentContent())
+        }); 
     }
 
     handleUpdatePost = () => {
@@ -120,12 +94,12 @@ class PostEditor extends Component {
             processing: true,
             messagePost: 'Procesando...'
         });
-        fetch(Constants.apiUrl + 'wp/v2/posts/' + this.state.postId, {
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + this.props.post.id, {
             method: 'post',
             headers:{
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
-                'Authorization': 'Bearer ' + this.state.token
+                'Authorization': 'Bearer ' + this.props.token
             },
             body:JSON.stringify({
                 title: this.state.postTitle,
@@ -149,6 +123,7 @@ class PostEditor extends Component {
             <div className={classes.postEditor}>
                 <Grid container spacing={24}>
                     <Grid item xs={12} sm={9}>
+                        
                         <div className='postItem'>
                             <TextField 
                                 className='colgado'
@@ -160,6 +135,7 @@ class PostEditor extends Component {
                                 name='postColgado'
                             />
                         </div>
+
                         <div className='postItem'>
                             <TextField 
                                 className='title'
@@ -171,6 +147,7 @@ class PostEditor extends Component {
                                 name='postTitle'
                             />
                         </div>
+
                         <div className='editorContainer postItem'>
                             <TextField 
                                 label='Copete'
@@ -180,64 +157,17 @@ class PostEditor extends Component {
                                 onChange={this.handleChange}
                                 name='postExcerpt'
                             />
-                        </div>
-                        
-                        <div className='contentWrap'>
-                            <div className='toolbar'>
-                                <BlockStyleToolbar 
-                                    editorState={this.state.editorState}
-                                    onToggle={this.toggleBlockType}
-                                />
-                                <button className="styleButton" onClick={this.onUnderlineClick}>
-                                    U
-                                </button>
-                                <button className="styleButton" onClick={this.onBoldClick}>
-                                    <b>B</b>
-                                </button>
-                                <button className="styleButton" onClick={this.onItalicClick}>
-                                    <em>I</em>
-                                </button>
-                            </div>
-                            <div className='editorContainer content'>
-                                <Editor 
-                                    blockStyleFn={getBlockStyle}
-                                    editorState={this.state.editorState}
-                                    handleKeyCommand={this.handleKeyCommand}
-                                    onChange= { this.onChange }
-                                />
-                            </div>
-                        </div>                    
+                        </div>                        
+
+                        <RichEditor 
+                            editorState={this.state.editorState}
+                            onContentChange={this.onContentChange}
+                        />
+
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                        <Card className={classes.sideEditorInput}>
-                            <CardContent>
-
-                                <PostBoxSelect
-                                    title='Estado'
-                                    multiple={false}
-                                    value={this.state.postStatus}
-                                    handleChange={this.handleChange}
-                                    name='postStatus'
-                                    items={this.state.status}
-                                />
-
-                                <TextField
-                                    className={classes.sideEditorInput}
-                                    label="Fecha / Hora"
-                                    type="datetime-local"
-                                    value={this.state.postDate}
-                                />
-                                <PostBoxSelect
-                                    title='Categoría(s)'
-                                    multiple={true}
-                                    value={this.state.postCategories}
-                                    handleChange={this.handleChange}
-                                    name='postCategories'
-                                    items={this.props.categories}
-                                />
-                            </CardContent>
-                        </Card>
-
+                    <PostEditorSide />
+                        
                         <PostBox
                             postFeaturedImage={this.props.postFeaturedImage}
                             handleFeaturedImageClick={this.handleFeaturedImageClick}

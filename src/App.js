@@ -19,7 +19,11 @@ class App extends Component {
       disableSubmitLogin: true,
       token: false,
       post: false,
+      postColgado: '',
+      postTitle: '',
+      postExcerpt: '',
       postFeaturedImage: false,
+      postStatus: [],
       posts: [],
       categories: false,
       categoriesSelected: [],
@@ -83,7 +87,12 @@ class App extends Component {
   }
 
   fetchPost = (post) => { 
-      this.setState({ post })
+      this.setState({ 
+        post,
+        //postColgado: post.colgado,
+        //postTitle: post.title.rendered,
+        //postExcerpt: post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
+       })
       this.fetchFeaturedImage(post.featured_media)
   }
 
@@ -224,17 +233,13 @@ class App extends Component {
     })
   }
 
-  handleChange = event => {
-    let change = {}
-    change[event.target.name] = event.target.value
-    this.setState(change)
-  }
-
   handleShowMediaLibrary = () => {
       this.setState({
           showMediaLibrary: true
       })
   }
+
+
 
   render() {
     const { classes } = this.props;
@@ -242,8 +247,7 @@ class App extends Component {
     return (
       <div className={classes.App}>
         {
-          ( !this.state.token ||
-          this.state.isLoading ) &&
+          !this.state.token &&
           <SignIn 
             username = {this.handleUsername}
             password = {this.handlePassword}
@@ -274,6 +278,7 @@ class App extends Component {
             fetchPosts = {this.fetchPosts}
             posts = {this.state.posts}
             loadingPosts = {this.state.loadingPosts}
+            handleChange = {this.handleChange}
           />
         }
         {
@@ -281,12 +286,15 @@ class App extends Component {
           !this.state.showMediaLibrary &&
           <PostEditor 
               token = {this.state.token}
+              post = {this.state.post}
               postFeaturedImage = {this.state.postFeaturedImage}
-              postContent = {this.state.post}
+              //postStatus = {this.state.postStatus}
+              handleChange = {this.handleChange}
               handleClose = {this.handleClose}
               categories = {this.state.categories}
               handleShowMediaLibrary = {this.handleShowMediaLibrary}
               isLoading = {this.state.isLoading}
+              status = {this.state.status}
           />
         }
         {
