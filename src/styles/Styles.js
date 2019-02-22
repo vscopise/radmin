@@ -160,6 +160,9 @@ const styles = theme => ({
     sideEditorInput: {
       width: '100%',
       marginBottom: 20,
+      '& .side-editor-select': {
+        width: '100%',
+      }
     },
     sideEditorInputLast: {
       width: '100%',

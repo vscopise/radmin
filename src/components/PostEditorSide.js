@@ -22,9 +22,30 @@ import PostBox from './PostBox';
 }*/
 import styles from '../styles/Styles';
 
-import PostBoxSelect from './PostBoxSelect';
-
-
+//import PostBoxSelect from './PostBoxSelect';
+const PostBoxSelect = withStyles(styles)(
+    (props) => (
+        <div className={props.classes.sideEditorInput}>
+            <InputLabel>{props.title}</InputLabel>
+            <Select
+                className='side-editor-select'
+                multiple={props.multiple}
+                value={props.value}
+                onChange={props.handleChange}
+                name={props.name}
+            >
+                {props.items.map(item => (
+                    <MenuItem 
+                        key={item.id} 
+                        value={item.id}
+                    >
+                        {item.name}
+                    </MenuItem>
+                ))}
+            </Select>
+        </div>
+    )
+)
 
 const PostEditorSide = (props) => (
     <div className={props.classes.PostEditorSide}>

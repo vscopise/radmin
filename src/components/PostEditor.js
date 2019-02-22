@@ -165,21 +165,21 @@ class PostEditor extends Component {
                         />
 
                     </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <PostEditorSide
-                                postStatus={this.state.postStatus}
-                                status={this.props.status}
-                                postCategories={this.state.postCategories}
-                                categories={this.props.categories}
-                                handleChange={this.handleChange}
-                                postDate={this.state.postDate}
-                                postFeaturedImage={this.props.postFeaturedImage}
-                                handleFeaturedImageClick={this.handleFeaturedImageClick}
-                                loading={this.state.loading}
-                                message={this.state.messageImage}
-                                onClick1={this.props.handleShowMediaLibrary}
-                                onClick2={this.handleUpdatePost}
-                            />
+                    <Grid item xs={12} sm={3}>
+                        <PostEditorSide
+                            postStatus={this.state.postStatus}
+                            status={this.props.status}
+                            postCategories={this.state.postCategories}
+                            categories={this.props.categories}
+                            handleChange={this.handleChange}
+                            postDate={this.state.postDate}
+                            postFeaturedImage={this.props.postFeaturedImage}
+                            handleFeaturedImageClick={this.handleFeaturedImageClick}
+                            loading={this.state.loading}
+                            message={this.state.messageImage}
+                            onClick1={this.props.handleShowMediaLibrary}
+                            onClick2={this.handleUpdatePost}
+                        />
 
                         <PostBoxSelect
                             title='Estado'
