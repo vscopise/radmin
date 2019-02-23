@@ -14,7 +14,7 @@ const PostBoxSelect = (props) => {
 
     return (
         <Fragment>
-            <InputLabel>{props.title}</InputLabel>
+            <InputLabel>'{props.title}'</InputLabel>
             <Select
                 className={classes.sideEditorInput}
                 multiple={props.multiple}

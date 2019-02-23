@@ -22,7 +22,7 @@ class App extends Component {
       postColgado: '',
       postTitle: '',
       postExcerpt: '',
-      postFeaturedImage: false,
+      //postFeaturedImage: false,
       postStatus: [],
       posts: [],
       categories: false,
@@ -93,12 +93,12 @@ class App extends Component {
         //postTitle: post.title.rendered,
         //postExcerpt: post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
        })
-      this.fetchFeaturedImage(post.featured_media)
+      //this.fetchFeaturedImage(post.featured_media)
   }
 
-  fetchFeaturedImage = (imageId) => {
+  fetchFeaturedImage = () => {
       this.setState({ isLoading: true })
-      fetch(Constants.apiUrl + 'wp/v2/media/' + imageId, {
+      fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media, {
           headers:{
               'Content-Type': 'application/json',
               'accept': 'application/json',
@@ -250,6 +250,11 @@ class App extends Component {
       
     })
   }
+  handleChange = event => {
+      let change = {}
+      change[event.target.name] = event.target.value
+      this.setState(change)
+  }
 
   render() {
     const { classes } = this.props;
@@ -274,14 +279,15 @@ class App extends Component {
             fetchPost = {this.fetchPost}
             categories = {this.state.categories}
             categoriesSelected = {this.state.categoriesSelected}
-            handleCategoriesChange = {this.handleCategoriesChange}
+            //handleCategoriesChange = {this.handleCategoriesChange}
+            handleChange = {this.handleChange}
             tags = {this.state.tags}
             tagsSelected = {this.state.tagsSelected}
-            handleTagsChange = {this.handleTagsChange}
+            //handleTagsChange = {this.handleTagsChange}
             users = {this.state.users}
             status = {this.state.status}
             statusSelected = {this.state.statusSelected}
-            handleStatusChange = {this.handleStatusChange}
+            //handleStatusChange = {this.handleStatusChange}
             handleAfterDateChange = {this.handleAfterDateChange}
             handleBeforeDateChange = {this.handleBeforeDateChange}
             handleChange = {this.handleChange}
@@ -299,9 +305,11 @@ class App extends Component {
               post = {this.state.post}
               postFeaturedImage = {this.state.postFeaturedImage}
               //postStatus = {this.state.postStatus}
+              fetchFeaturedImage = {this.fetchFeaturedImage}
               handleChange = {this.handleChange}
               handleClose = {this.handleClose}
               categories = {this.state.categories}
+              tags = {this.state.tags}
               handleShowMediaLibrary = {this.handleShowMediaLibrary}
               isLoading = {this.state.isLoading}
               status = {this.state.status}

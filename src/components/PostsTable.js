@@ -20,14 +20,11 @@ const PostsTable = (props) => {
             <PostTableNavBar
                 categories = {props.categories}
                 categoriesSelected = {props.categoriesSelected}
-                handleCategoriesChange={props.handleCategoriesChange}
                 tags = {props.tags}
                 tagsSelected = {props.tagsSelected}
-                handleTagsChange = {props.handleTagsChange}
-                handleChange = {props.handleChange}
+                handleChange={props.handleChange}
                 status = {props.status}
                 statusSelected={props.statusSelected}
-                handleStatusChange={props.handleStatusChange}
                 fetchPosts={props.fetchPosts}
                 handleAfterDateChange={props.handleAfterDateChange}
                 handleBeforeDateChange={props.handleBeforeDateChange}

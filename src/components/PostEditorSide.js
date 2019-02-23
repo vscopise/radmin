@@ -9,26 +9,44 @@ import {
     TextField,
     Typography,
     withStyles,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
 } from '@material-ui/core';
-import PostBox from './PostBox';
-/*const styles = {
-    sideEditorInput: {
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+//import PostBox from './PostBox';
+
+const styles = {
+    PostEditorSide: {
         width: '100%',
         marginBottom: 20,
+        '& .side-editor-panel': {
+            width: '100%',
+        },
+        '& .post-box': {
+            marginBottom: 20,
+            '& .side-editor-input': {
+                float: 'right',
+                maxWidth: 200,
+            },
+            '& .button': {
+                width: '100%',
+            }
+        },
     },
-      PostEditorSide: {
-
-    }
-}*/
-import styles from '../styles/Styles';
+}
 
 //import PostBoxSelect from './PostBoxSelect';
-const PostBoxSelect = withStyles(styles)(
-    (props) => (
-        <div className={props.classes.sideEditorInput}>
+const PostBox = (props) => (
+    <div className={'post-box'}>
+        {
+            props.title &&
             <InputLabel>{props.title}</InputLabel>
+        }
+        {
+            props.type === 'select' &&
             <Select
-                className='side-editor-select'
+                className={'side-editor-input'}
                 multiple={props.multiple}
                 value={props.value}
                 onChange={props.handleChange}
@@ -43,57 +61,139 @@ const PostBoxSelect = withStyles(styles)(
                     </MenuItem>
                 ))}
             </Select>
-        </div>
-    )
+        }
+        {
+            props.type === 'text' &&
+            <TextField
+                className={'side-editor-input'}
+                value={props.value}
+                type="datetime-local"
+                onChange={props.handleChange}
+                name={props.name}
+            />
+        }
+        {
+            props.type === 'featured-image' &&
+            <div>
+                {
+                    props.postFeaturedImage &&
+                    <div>
+                        <img src={props.postFeaturedImage} alt='' />
+                        <PostBoxButton 
+                            onClick={props.onClick1}
+                            primary={false}
+                            disabled={props.disabledButtons}
+                            label='Cerrar'
+                        />
+                    </div>
+                }
+                {
+                    ! props.postFeaturedImage &&
+                    <PostBoxButton 
+                        onClick={props.onClick1}
+                        primary={true}
+                        disabled={props.disabledButtons}
+                        label='Establecer imagen destacada'
+                    />
+                }
+            </div>
+        }
+    </div>
 )
+
+const PostBoxButton = (props) => {
+    return (
+        <Button 
+            className={props.primary ? 'button' : 'button button1'}
+            variant="contained" 
+            color={props.primary ? 'primary' : 'default'}
+            onClick={props.onClick}
+            disabled={props.disabled}
+        >
+            {props.label}
+        </Button>
+    );
+}
 
 const PostEditorSide = (props) => (
     <div className={props.classes.PostEditorSide}>
-        <Card className={props.classes.sideEditorInput}>
-            <CardContent>
+        <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                    Estado y visibilidad
+                </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails >
+                <div className={'side-editor-panel'}>
+                    <PostBox
+                        type='select'
+                        title='Visibilidad'
+                        multiple={false}
+                        value={props.postStatus}
+                        handleChange={props.handleChange}
+                        name='postStatus'
+                        items={props.status}
+                    />
+                    <PostBox 
+                        type='text'
+                        title='Fecha / Hora'
+                        value={props.postDate}
+                        handleChange={props.handleChange}
+                        name='postDate'
+                    />
+                </div>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                    Categorías y Etiquetas
+                </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <div className={'side-editor-panel'}>
+                    <PostBox
+                        type='select'
+                        title='Categoría(s)'
+                        multiple={true}
+                        value={props.postCategories}
+                        handleChange={props.handleChange}
+                        name='postCategories'
+                        items={props.categories}
+                    />
+                    <PostBox
+                        type='select'
+                        title='Etiqueta(s)'
+                        multiple={true}
+                        value={props.postTags}
+                        handleChange={props.handleChange}
+                        name='postTags'
+                        items={props.tags}
+                    />
 
-            <PostBoxSelect
-                title='Estado'
-                multiple={false}
-                value={props.postStatus}
-                handleChange={props.handleChange}
-                name='postStatus'
-                items={props.status}
-            />
-                        
-            <PostBoxSelect
-                title='Categoría(s)'
-                multiple={true}
-                value={props.postCategories}
-                handleChange={props.handleChange}
-                name='postCategories'
-                items={props.categories}
-            />
-
-            <TextField
-                id="datetime-local"
-                value={props.postDate}
-                className={props.classes.sideEditorInput}
-                label="Fecha / Hora"e
-                type="datetime-local"
-               // defaultValue={props.postDate}
-                onChange={props.handleChange}
-                name="postDate"
-            />
-
-            <PostBox
-                postFeaturedImage={props.postFeaturedImage}
-                handleFeaturedImageClick={props.handleFeaturedImageClick}
-                loading={props.loading}
-                message={props.messageImage}
-                onClick1={props.handleShowMediaLibrary}
-                title='Imagen destacada'
-            />
-
-            
-
-            </CardContent>
-        </Card>
+                </div>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                    Imagen Destacada
+                </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <div className={'side-editor-panel'}>
+                    <PostBox
+                        type='featured-image'
+                        postFeaturedImage={props.postFeaturedImage}
+                        handleFeaturedImageClick={props.handleFeaturedImageClick}
+                        loading={props.loading}
+                        message={props.messageImage}
+                        onClick1={props.handleShowMediaLibrary}
+                        buttonLabel1=''
+                    />
+                </div>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
     </div>
 )
 export default withStyles(styles)(PostEditorSide);
