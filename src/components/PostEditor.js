@@ -184,7 +184,7 @@ class PostEditor extends Component {
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
                             loading={this.state.loading}
                             message={this.state.messageImage}
-                            onClick1={this.props.handleShowMediaLibrary}
+                            handleShowMediaLibrary={this.props.handleShowMediaLibrary}
                             onClick2={this.handleUpdatePost}
                         />
 

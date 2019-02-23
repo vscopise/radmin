@@ -16,7 +16,7 @@ const MediaLibrary = (props) => {
             <Grid container spacing={24}>
             {
                 props.mediaItems.map(item =>(
-                    <Grid item key={item.id} onClick={props.handleMediaSelect}>
+                    <Grid item key={item.id} onClick={props.handleChange}>
                         <img src={item.media_details.sizes.thumbnail.source_url} />
                     </Grid>
                 ))

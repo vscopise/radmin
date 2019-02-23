@@ -90,7 +90,7 @@ const PostBox = (props) => (
                 {
                     ! props.postFeaturedImage &&
                     <PostBoxButton 
-                        onClick={props.onClick1}
+                        onClick={props.handleShowMediaLibrary}
                         primary={true}
                         disabled={props.disabledButtons}
                         label='Establecer imagen destacada'
@@ -188,7 +188,7 @@ const PostEditorSide = (props) => (
                         handleFeaturedImageClick={props.handleFeaturedImageClick}
                         loading={props.loading}
                         message={props.messageImage}
-                        onClick1={props.handleShowMediaLibrary}
+                        handleShowMediaLibrary={props.handleShowMediaLibrary}
                         buttonLabel1=''
                     />
                 </div>

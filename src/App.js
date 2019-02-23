@@ -36,6 +36,7 @@ class App extends Component {
       dateAfter: '',
       isLoading: false,
       loadingPosts: false,
+      showMediaLibrary: false,
     };
   }
 
@@ -235,7 +236,7 @@ class App extends Component {
 
   handleShowMediaLibrary = () => {
       this.setState({
-          showMediaLibrary: true
+          showMediaLibrary: ! this.state.showMediaLibrary
       })
   }
 
@@ -321,6 +322,7 @@ class App extends Component {
               mediaItems={this.state.mediaItems}
               handleMediaClose={this.handleMediaClose}
               handleMediaSelect={this.handleMediaSelect}
+              handleChange={this.handleChange}
           />
         }
       </div>
