@@ -22,12 +22,11 @@ const PostsTable = (props) => {
                 categoriesSelected = {props.categoriesSelected}
                 tags = {props.tags}
                 tagsSelected = {props.tagsSelected}
-                handleChange={props.handleChange}
+                handleChange = {props.handleChange}
                 status = {props.status}
                 statusSelected={props.statusSelected}
                 fetchPosts={props.fetchPosts}
-                handleAfterDateChange={props.handleAfterDateChange}
-                handleBeforeDateChange={props.handleBeforeDateChange}
+                newPost = {props.newPost}
             />
             {
                 ! props.post &&

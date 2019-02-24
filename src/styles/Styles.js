@@ -1,18 +1,10 @@
-import { red } from "@material-ui/core/colors";
-
 const styles = theme => ({
     App: {
       backgroundColor: '#fafafa',
       padding: theme.spacing.unit * 3,
 
     },
-    postTableNavBar: {
-      flexGrow: 1
-    },
-    appBar: {
-      backgroundColor: '#cfcfcf',
-      marginBottom: theme.spacing.unit,
-    },
+    
 
     postEditor: {
       '& .postItem': {
@@ -108,11 +100,9 @@ const styles = theme => ({
         },
         '& .public-DraftEditor-content': {
           margin: '0 -15px -15px',
+          minHeight: 100,
           padding: 15
         },
-        '& .public-DraftEditor-content': {
-           minHeight: 100,
-         },
       },
       '& .RichEditor-editor .RichEditor-blockquote': {
         borderLeft: '5px solid #eee',
@@ -259,10 +249,6 @@ const styles = theme => ({
     noClick: {
       cursor: 'initial',
     },
-    Loading: {
-      textAlign: 'center',
-      padding: `${theme.spacing.unit * 2}px 0`,
-    }
   });
 
   export default styles;

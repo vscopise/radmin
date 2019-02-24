@@ -1,4 +1,4 @@
-import React, { Fragment }  from 'react';
+import React  from 'react';
 import {
     Button,
 //    Card,
@@ -87,7 +87,6 @@ const PostBox = (props) => (
                         <img src={props.postFeaturedImage.media_details.sizes.thumbnail.source_url} alt='' />
                         <PostBoxButton 
                             onClick={props.onClick1}
-                            //primary={false}
                             disabled={props.disabledButtons}
                             label='Reemplazar imagen'
                         />
@@ -107,19 +106,17 @@ const PostBox = (props) => (
     </div>
 )
 
-const PostBoxButton = (props) => {
-    return (
-        <Button 
-            className={props.primary ? 'button' : 'button button1'}
-            variant="contained" 
-            color={props.primary ? 'primary' : 'default'}
-            onClick={props.onClick}
-            disabled={props.disabled}
-        >
-            {props.label}
-        </Button>
-    );
-}
+const PostBoxButton = (props) => (
+    <Button 
+        className={props.primary ? 'button' : 'button button1'}
+        variant="contained" 
+        color={props.primary ? 'primary' : 'default'}
+        onClick={props.onClick}
+        disabled={props.disabled}
+    >
+        {props.label}
+    </Button>
+)
 
 const PostEditorSide = (props) => (
     <div className={props.classes.PostEditorSide}>

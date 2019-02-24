@@ -1,38 +1,25 @@
-import React, { Component, Fragment } from 'react';
-
-//import TimePicker from 'react-time-picker';
-//import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
-
+import React, { Component } from 'react';
 
 import {
     ContentState, 
-    Editor, 
+    //Editor, 
     EditorState, 
-    RichUtils, 
+    //RichUtils, 
 } from 'draft-js';
 import RichEditor from './RichEditor';
-//import BlockStyleToolbar, { getBlockStyle } from './blockStyles/BlockStyleToolbar';
 import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 import { stateToHTML } from "draft-js-export-html";
 
 import * as Constants from '../assets/Constants';
 
 import {
-    Button,
     Grid,
-    InputLabel,
-    MenuItem,
-    Select,
     TextField,
     withStyles,
-    FormControl,
-    Card,
-    CardContent,
-    Typography,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
 import PostBox from './PostBox';
-import PostBoxSelect from './PostBoxSelect';
+//import PostBoxSelect from './PostBoxSelect';
 import PostEditorSide from './PostEditorSide';
 
 
@@ -53,9 +40,6 @@ class PostEditor extends Component {
         }
 
         this.state = {
-            
-            //token: this.props.token,
-            //postId: this.props.postId,
             postColgado: this.props.post.colgado,
             postTitle: this.props.post.title.rendered,
             postExcerpt: this.props.post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
@@ -100,8 +84,9 @@ class PostEditor extends Component {
             processing: true,
             messagePost: 'Procesando...'
         });
-        let FeaturedMedia = this.props.postFeaturedMedia;
-        fetch(Constants.apiUrl + 'wp/v2/posts/' + this.props.post.id, {
+        //let FeaturedMedia = this.props.postFeaturedMedia;
+        let postId = this.props.post.id ? this.props.post.id : '';
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + postId, {
             method: 'post',
             headers:{
                 'Content-Type': 'application/json',
@@ -114,7 +99,8 @@ class PostEditor extends Component {
                 excerpt: this.state.postExcerpt,
                 status: this.state.postStatus,
                 colgado: this.state.postColgado,
-                //colgado: this.state.post.colgado,
+                categories: this.state.postCategories,
+                tags: this.state.postTags,
                 featured_media: this.props.postFeaturedImage.id
             })
         })

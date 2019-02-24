@@ -4,7 +4,13 @@ import {
 } from '@material-ui/core'
 
 import loadingImg from '../assets/loading.gif';
-import styles from '../styles/Styles'
+
+const styles = (theme) => ({
+    Loading: {
+        textAlign: 'center',
+        padding: `${theme.spacing.unit * 2}px 0`,
+    }
+})
 
 const Loading = (props) => (
     <div className={props.classes.Loading}>
@@ -16,4 +22,4 @@ const Loading = (props) => (
     </div>
 )
 
-export default withStyles(styles)(Loading)
+export default withStyles(styles)(Loading);

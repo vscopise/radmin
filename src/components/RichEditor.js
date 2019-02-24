@@ -1,20 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import {
-    ContentState, 
     Editor, 
-    EditorState, 
     RichUtils, 
 } from 'draft-js';
-//import { stateToHTML } from "draft-js-export-html";
 
 import {
     withStyles,
 } from '@material-ui/core';
-//import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
 
 import styles from '../styles/Styles';
-
-//const {Editor, EditorState, RichUtils} = Draft;
 
 class RichEditor extends React.Component {
   constructor(props) {

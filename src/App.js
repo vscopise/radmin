@@ -36,6 +36,9 @@ class App extends Component {
       isLoading: false,
       loadingPosts: false,
       showMediaLibrary: false,
+      searchItems: '',
+      imageDetail: false,
+      postFeaturedImage: false,
     };
   }
 
@@ -93,29 +96,48 @@ class App extends Component {
       this.fetchFeaturedImage()
   }
 
+  newPost = () => {
+    this.setState({
+      post: {
+        date: new Date().toISOString().slice(0,16),
+        tags: [],
+        categories: [1],
+        content: {rendered: ''},
+        title: {rendered: ''},
+        excerpt: {rendered: ''},
+
+      }
+    });
+  }
+
   fetchFeaturedImage = () => {
-      this.setState({ isLoading: true })
-      fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media)  
-      .then((response) => {
-          if(response.ok) {
-              response.json().then(image => {
-                  this.setState({
-                      postFeaturedImage: image,
-                      isLoading: false,
-                  })
-              });
-          } else {
-              this.setState({
-                  messageImage: 'Error cargando la imagen',
-                  isLoading: false,
-              });
-          }
+      this.setState({ 
+        isLoading: true, 
+        postFeaturedImage: false
       })
-      .catch((ex) => {
-        this.setState({
-            messageImage: 'Error cargando la imagen'
+      if (this.state.post.featured_media) {
+        fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media)  
+        .then((response) => {
+            if(response.ok) {
+                response.json().then(image => {
+                    this.setState({
+                        postFeaturedImage: image,
+                        isLoading: false,
+                    })
+                });
+            } else {
+                this.setState({
+                    messageImage: 'Error cargando la imagen',
+                    isLoading: false,
+                });
+            }
+        })
+        .catch((ex) => {
+          this.setState({
+              messageImage: 'Error cargando la imagen'
+          });
         });
-      });
+      }
   }
 
   fetchPosts = () => {
@@ -151,7 +173,12 @@ class App extends Component {
           dateAfterToFetch = '&after=' + this.state.dateAfter + 'T00:00:00';
       }
       
-      fetch(Constants.apiUrl + 'wp/v2/posts/' + statusToFetch + catToFetch + tagToFetch + dateBeforeToFetch + dateAfterToFetch, {
+      fetch(Constants.apiUrl + 'wp/v2/posts/' 
+        + statusToFetch 
+        + catToFetch 
+        + tagToFetch 
+        + dateBeforeToFetch 
+        + dateAfterToFetch, {
           headers: new Headers({
               Authorization: `Bearer ${this.state.token}`
           }),
@@ -161,6 +188,7 @@ class App extends Component {
           posts: posts,
           loadingPosts: false
       }))
+      .then(this.fetchFeaturedImage)
       .catch(error => console.log(error))
   }
 
@@ -206,14 +234,21 @@ class App extends Component {
   }
 
   fetchMediaItems = () => {
-    fetch(Constants.apiUrl + 'wp/v2/media', {
+    let search = ('' === this.state.searchItems) ?
+      '' : '&search=' + this.state.searchItems;
+      this.setState({
+        isLoading: true,
+        imageDetail: false,
+      });
+    fetch(Constants.apiUrl + 'wp/v2/media/?per_page=20' + search, {
         headers: {
             authorization: 'Bearer ' + this.state.token,
         }, 
       })
     .then(response => response.json())
     .then(mediaItems => this.setState({
-        mediaItems
+        mediaItems,
+        isLoading: false
     }))
     .catch(error => console.log(error))
   }
@@ -237,10 +272,16 @@ class App extends Component {
   }
 
   handleMediaCancel = () => {
-    this.setState({
+    this.setState(prevState => ({
+      post: {
+        ...prevState.post,
+        featured_media: false
+      },
+      postFeaturedImage: false,
       mediaSelected: false,
       showMediaLibrary: false,
-    });
+    }));
+
   }
 
   handleMediaSelect = (e, item) => {
@@ -259,11 +300,15 @@ class App extends Component {
       this.setState(change)
   }
 
-  render() {
-    const { classes } = this.props;
+  handleimageDetail = () => {
+    this.setState({
+      imageDetail: true
+    })
+  }
 
+  render() {
     return (
-      <div className={classes.App}>
+      <div className={this.props.classes.App}>
         {
           !this.state.token &&
           <SignIn 
@@ -280,6 +325,7 @@ class App extends Component {
           <PostsTable 
             token = {this.state.token}
             fetchPost = {this.fetchPost}
+            newPost = {this.newPost}
             categories = {this.state.categories}
             categoriesSelected = {this.state.categoriesSelected}
             //handleCategoriesChange = {this.handleCategoriesChange}
@@ -291,13 +337,11 @@ class App extends Component {
             status = {this.state.status}
             statusSelected = {this.state.statusSelected}
             //handleStatusChange = {this.handleStatusChange}
-            handleAfterDateChange = {this.handleAfterDateChange}
-            handleBeforeDateChange = {this.handleBeforeDateChange}
-            handleChange = {this.handleChange}
+            //handleAfterDateChange = {this.handleAfterDateChange}
+            //handleBeforeDateChange = {this.handleBeforeDateChange}
             fetchPosts = {this.fetchPosts}
             posts = {this.state.posts}
             loadingPosts = {this.state.loadingPosts}
-            handleChange = {this.handleChange}
           />
         }
         {
@@ -321,11 +365,16 @@ class App extends Component {
           this.state.showMediaLibrary &&
           <MediaLibrary
               mediaItems = {this.state.mediaItems}
-              postFeaturedImage={this.state.postFeaturedImage}
-              handleMediaConfirm={this.handleMediaConfirm}
-              handleMediaCancel={this.handleMediaCancel}
-              handleMediaSelect={this.handleMediaSelect}
+              searchItems = {this.state.searchItems}
+              postFeaturedImage = {this.state.postFeaturedImage}
+              handleMediaConfirm = {this.handleMediaConfirm}
+              handleMediaCancel = {this.handleMediaCancel}
+              handleMediaSelect = {this.handleMediaSelect}
               handleChange = {this.handleChange}
+              fetchMediaItems = {this.fetchMediaItems}
+              isLoading = {this.state.isLoading}
+              imageDetail = {this.state.imageDetail}
+              handleimageDetail = {this.handleimageDetail}
           />
         }
       </div>
