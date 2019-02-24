@@ -1,8 +1,8 @@
 import React, { Fragment }  from 'react';
 import {
     Button,
-    Card,
-    CardContent,
+//    Card,
+//    CardContent,
     InputLabel,
     MenuItem,
     Select,
@@ -14,29 +14,35 @@ import {
     ExpansionPanelDetails,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-//import PostBox from './PostBox';
 
-const styles = {
+const styles = (theme) => ({
     PostEditorSide: {
         width: '100%',
         marginBottom: 20,
+        
         '& .side-editor-panel': {
             width: '100%',
         },
         '& .post-box': {
             marginBottom: 20,
+            fontSize: theme.spacing.unit,
             '& .side-editor-input': {
                 float: 'right',
                 maxWidth: 200,
             },
             '& .button': {
                 width: '100%',
-            }
+            },
+            '& .img-container': {
+                textAlign: 'center',
+            },
         },
+        '& .post-box:last-child': {
+            marginBottom: 0,
+        }
     },
-}
+})
 
-//import PostBoxSelect from './PostBoxSelect';
 const PostBox = (props) => (
     <div className={'post-box'}>
         {
@@ -77,13 +83,13 @@ const PostBox = (props) => (
             <div>
                 {
                     props.postFeaturedImage &&
-                    <div>
-                        <img src={props.postFeaturedImage} alt='' />
+                    <div className='img-container'>
+                        <img src={props.postFeaturedImage.media_details.sizes.thumbnail.source_url} alt='' />
                         <PostBoxButton 
                             onClick={props.onClick1}
-                            primary={false}
+                            //primary={false}
                             disabled={props.disabledButtons}
-                            label='Cerrar'
+                            label='Reemplazar imagen'
                         />
                     </div>
                 }
@@ -190,6 +196,7 @@ const PostEditorSide = (props) => (
                         message={props.messageImage}
                         handleShowMediaLibrary={props.handleShowMediaLibrary}
                         buttonLabel1=''
+                        onClick1={props.onClick1}
                     />
                 </div>
             </ExpansionPanelDetails>

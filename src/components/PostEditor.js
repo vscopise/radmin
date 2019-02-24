@@ -66,6 +66,7 @@ class PostEditor extends Component {
             postCategories:this.props.post.categories,
             postTags:this.props.post.tags,
             postDate: this.props.post.date,
+            postFeaturedMedia: this.props.postFeaturedMedia,
             processing: false,
             loading: false,
             messageImage: '',
@@ -99,6 +100,7 @@ class PostEditor extends Component {
             processing: true,
             messagePost: 'Procesando...'
         });
+        let FeaturedMedia = this.props.postFeaturedMedia;
         fetch(Constants.apiUrl + 'wp/v2/posts/' + this.props.post.id, {
             method: 'post',
             headers:{
@@ -112,6 +114,8 @@ class PostEditor extends Component {
                 excerpt: this.state.postExcerpt,
                 status: this.state.postStatus,
                 colgado: this.state.postColgado,
+                //colgado: this.state.post.colgado,
+                featured_media: this.props.postFeaturedImage.id
             })
         })
         .then(response => response.json())
@@ -122,10 +126,10 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        //const { classes } = this.props;
 
         return (
-            <div className={classes.postEditor}>
+            <div className={this.props.classes.postEditor}>
                 <Grid container spacing={24}>
                     <Grid item xs={12} sm={9}>
                         
@@ -185,6 +189,7 @@ class PostEditor extends Component {
                             loading={this.state.loading}
                             message={this.state.messageImage}
                             handleShowMediaLibrary={this.props.handleShowMediaLibrary}
+                            onClick1={this.props.handleShowMediaLibrary}
                             onClick2={this.handleUpdatePost}
                         />
 

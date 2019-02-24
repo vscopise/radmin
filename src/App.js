@@ -22,7 +22,6 @@ class App extends Component {
       postColgado: '',
       postTitle: '',
       postExcerpt: '',
-      //postFeaturedImage: false,
       postStatus: [],
       posts: [],
       categories: false,
@@ -90,27 +89,18 @@ class App extends Component {
   fetchPost = (post) => { 
       this.setState({ 
         post,
-        //postColgado: post.colgado,
-        //postTitle: post.title.rendered,
-        //postExcerpt: post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
-       })
-      //this.fetchFeaturedImage(post.featured_media)
+      })
+      this.fetchFeaturedImage()
   }
 
   fetchFeaturedImage = () => {
       this.setState({ isLoading: true })
-      fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media, {
-          headers:{
-              'Content-Type': 'application/json',
-              'accept': 'application/json',
-              'Authorization': 'Bearer ' + this.state.token
-          }
-      })
+      fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media)  
       .then((response) => {
           if(response.ok) {
               response.json().then(image => {
                   this.setState({
-                      postFeaturedImage: image.media_details.sizes.thumbnail.source_url,
+                      postFeaturedImage: image,
                       isLoading: false,
                   })
               });
@@ -240,17 +230,29 @@ class App extends Component {
       })
   }
 
-  handleMediaClose = () => {
+  handleMediaConfirm = () => {
     this.setState({
       showMediaLibrary: false,
     });
   }
 
-  handleMediaSelect = () => {
+  handleMediaCancel = () => {
     this.setState({
-      
-    })
+      mediaSelected: false,
+      showMediaLibrary: false,
+    });
   }
+
+  handleMediaSelect = (e, item) => {
+    this.setState(prevState => ({
+      post: {
+        ...prevState.post,
+        featured_media: item.id
+      },
+      postFeaturedImage: item
+    }));
+  }
+
   handleChange = event => {
       let change = {}
       change[event.target.name] = event.target.value
@@ -305,7 +307,6 @@ class App extends Component {
               token = {this.state.token}
               post = {this.state.post}
               postFeaturedImage = {this.state.postFeaturedImage}
-              //postStatus = {this.state.postStatus}
               fetchFeaturedImage = {this.fetchFeaturedImage}
               handleChange = {this.handleChange}
               handleClose = {this.handleClose}
@@ -319,10 +320,12 @@ class App extends Component {
         {
           this.state.showMediaLibrary &&
           <MediaLibrary
-              mediaItems={this.state.mediaItems}
-              handleMediaClose={this.handleMediaClose}
+              mediaItems = {this.state.mediaItems}
+              postFeaturedImage={this.state.postFeaturedImage}
+              handleMediaConfirm={this.handleMediaConfirm}
+              handleMediaCancel={this.handleMediaCancel}
               handleMediaSelect={this.handleMediaSelect}
-              handleChange={this.handleChange}
+              handleChange = {this.handleChange}
           />
         }
       </div>
