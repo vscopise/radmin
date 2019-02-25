@@ -120,14 +120,20 @@ const PostTableNavBar = (props) => {
                             name='dateBefore' 
                             handleChange={props.handleChange}
                         />
-                        <TableNavButtonInput 
-                            onClick={props.fetchPosts} 
-                            label='Filtrar' 
-                        />
-                        <TableNavButtonInput 
-                            onClick={props.newPost} 
-                            label='Nueva entrada' 
-                        />
+                        {
+                            props.categories && props.tags &&
+                            <TableNavButtonInput 
+                                onClick={props.fetchPosts} 
+                                label='Filtrar' 
+                            />
+                        }
+                        {
+                            props.categories && props.tags &&
+                            <TableNavButtonInput 
+                                onClick={props.newPost} 
+                                label='Nueva entrada' 
+                            />
+                        }
                     </Grid>
                 </Toolbar>
             </AppBar>

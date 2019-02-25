@@ -39,6 +39,9 @@ class App extends Component {
       searchItems: '',
       imageDetail: false,
       postFeaturedImage: false,
+      uploadFile: false,
+      previewImgUrl: false,
+      tabsValue: 1,
     };
   }
 
@@ -99,6 +102,7 @@ class App extends Component {
   newPost = () => {
     this.setState({
       post: {
+        status: 'draft',
         date: new Date().toISOString().slice(0,16),
         tags: [],
         categories: [1],
@@ -106,7 +110,9 @@ class App extends Component {
         title: {rendered: ''},
         excerpt: {rendered: ''},
 
-      }
+      },
+      //postFeaturedImage: false,
+      //isLoading: false,
     });
   }
 
@@ -136,6 +142,10 @@ class App extends Component {
           this.setState({
               messageImage: 'Error cargando la imagen'
           });
+        });
+      } else {
+        this.setState({
+          isLoading: false,
         });
       }
   }
@@ -280,6 +290,8 @@ class App extends Component {
       postFeaturedImage: false,
       mediaSelected: false,
       showMediaLibrary: false,
+      previewImgUrl: false,
+      uploadFile: false
     }));
 
   }
@@ -296,8 +308,61 @@ class App extends Component {
 
   handleChange = event => {
       let change = {}
-      change[event.target.name] = event.target.value
-      this.setState(change)
+      change[event.target.name] = event.target.value;
+      this.setState(change);
+
+      if ( event.target.files ) {
+        const fileToUpload = event.target.files[0]
+        if ( !fileToUpload ) {
+          return
+        }
+        this.setState({fileToUpload})
+      
+        this.generatePreviewImgUrl(fileToUpload, previewImgUrl => {
+          this.setState({ previewImgUrl })
+        })
+      }
+  }
+
+  handleChangeTab = (event, value) => {
+    this.setState({ tabsValue: value });
+  };
+
+  handleUploadImage = () => {
+    this.setState({
+      isLoading: true
+    });
+    let reader = new FileReader();
+    reader.readAsDataURL( this.state.fileToUpload );
+
+    reader.onload = (e) => {
+      //console.log(e.target.result);
+      const formData={file: e.target.result}
+
+      fetch(Constants.apiUrl + 'wp/v2/media', {
+        method: 'post',
+        headers: {
+          authorization: 'Bearer ' + this.state.token,
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then((responseJson) => {
+          //console.log(responseJson);
+          this.setState({
+            isLoading: false,
+          });
+         }
+      )
+      .catch(error => console.log(error))
+
+    }
+  }
+
+  generatePreviewImgUrl = (file, callback) => {
+    const reader = new FileReader()
+    const url = reader.readAsDataURL(file)
+    reader.onloadend = e => callback(reader.result)
   }
 
   handleimageDetail = () => {
@@ -328,17 +393,12 @@ class App extends Component {
             newPost = {this.newPost}
             categories = {this.state.categories}
             categoriesSelected = {this.state.categoriesSelected}
-            //handleCategoriesChange = {this.handleCategoriesChange}
             handleChange = {this.handleChange}
             tags = {this.state.tags}
             tagsSelected = {this.state.tagsSelected}
-            //handleTagsChange = {this.handleTagsChange}
             users = {this.state.users}
             status = {this.state.status}
             statusSelected = {this.state.statusSelected}
-            //handleStatusChange = {this.handleStatusChange}
-            //handleAfterDateChange = {this.handleAfterDateChange}
-            //handleBeforeDateChange = {this.handleBeforeDateChange}
             fetchPosts = {this.fetchPosts}
             posts = {this.state.posts}
             loadingPosts = {this.state.loadingPosts}
@@ -375,6 +435,11 @@ class App extends Component {
               isLoading = {this.state.isLoading}
               imageDetail = {this.state.imageDetail}
               handleimageDetail = {this.handleimageDetail}
+              uploadFile={this.state.uploadFile}
+              previewImgUrl={this.state.previewImgUrl}
+              handleUploadImage={this.handleUploadImage}
+              tabsValue={this.state.tabsValue}
+              handleChangeTab={this.handleChangeTab}
           />
         }
       </div>
