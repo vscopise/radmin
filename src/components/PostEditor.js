@@ -40,13 +40,10 @@ class PostEditor extends Component {
         }
 
         this.state = {
-            postColgado: this.props.post.colgado,
-            postTitle: this.props.post.title.rendered,
-            postExcerpt: this.props.post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
             editorState,
             editorContentHtml: stateToHTML(editorState.getCurrentContent()),
             //status: Constants.status,
-            postStatus: this.props.post.status,
+            //postStatus: this.props.post.status,
             postCategories:this.props.post.categories,
             postTags:this.props.post.tags,
             postDate: this.props.post.date,
@@ -54,12 +51,16 @@ class PostEditor extends Component {
             processing: false,
             loading: false,
             messageImage: '',
-            messagePost: '',
+            //messagePost: '',
         };
     }
 
     componentDidMount() {
-        this.props.fetchFeaturedImage()
+        /*this.setState({
+            postColgado: this.props.post.colgado,
+            postExcerpt: this.props.post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
+        });*/
+        this.props.fetchFeaturedImage();
     }
 
     handleChange = event => {
@@ -68,9 +69,9 @@ class PostEditor extends Component {
         this.setState(change)
     }
     
-    handleDateChange = date => {
+    /*handleDateChange = date => {
         this.setState({ selectedDate: date });
-    };
+    };*/
 
     onContentChange = editorState => {
         this.setState({
@@ -79,7 +80,7 @@ class PostEditor extends Component {
         }); 
     }
 
-    handleUpdatePost = () => {
+    /*handleUpdatePost = () => {
         this.setState({
             processing: true,
             messagePost: 'Procesando...'
@@ -94,11 +95,12 @@ class PostEditor extends Component {
                 'Authorization': 'Bearer ' + this.props.token
             },
             body:JSON.stringify({
-                title: this.state.postTitle,
+                title: this.props.postTitle,
                 content: this.state.editorContentHtml,
-                excerpt: this.state.postExcerpt,
+                date: this.state.postDate,
+                excerpt: this.props.postExcerpt,
                 status: this.state.postStatus,
-                colgado: this.state.postColgado,
+                colgado: this.props.postColgado,
                 categories: this.state.postCategories,
                 tags: this.state.postTags,
                 featured_media: this.props.postFeaturedImage.id
@@ -109,11 +111,10 @@ class PostEditor extends Component {
             processing: false,
             messagePost: 'Artículo guardado correctamente'
         }))
-    }
+        //.then(() => this.props.fetchPosts)
+    }*/
 
     render() {
-        //const { classes } = this.props;
-
         return (
             <div className={this.props.classes.postEditor}>
                 <Grid container spacing={24}>
@@ -125,8 +126,8 @@ class PostEditor extends Component {
                                 label='Colgado'
                                 variant='filled'
                                 fullWidth
-                                value={this.state.postColgado}
-                                onChange={this.handleChange}
+                                value={this.props.postColgado}
+                                onChange={this.props.handleChange}
                                 name='postColgado'
                             />
                         </div>
@@ -137,8 +138,8 @@ class PostEditor extends Component {
                                 label='Título'
                                 variant='filled'
                                 fullWidth
-                                value={this.state.postTitle}
-                                onChange={this.handleChange}
+                                value={this.props.postTitle}
+                                onChange={this.props.handleChange}
                                 name='postTitle'
                             />
                         </div>
@@ -148,8 +149,8 @@ class PostEditor extends Component {
                                 label='Copete'
                                 fullWidth
                                 multiline
-                                value={this.state.postExcerpt}
-                                onChange={this.handleChange}
+                                value={this.props.postExcerpt}
+                                onChange={this.props.handleChange}
                                 name='postExcerpt'
                             />
                         </div>                        
@@ -162,7 +163,7 @@ class PostEditor extends Component {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <PostEditorSide
-                            postStatus={this.state.postStatus}
+                            postStatus={this.props.postStatus}
                             status={this.props.status}
                             postCategories={this.state.postCategories}
                             categories={this.props.categories}
@@ -173,10 +174,12 @@ class PostEditor extends Component {
                             postFeaturedImage={this.props.postFeaturedImage}
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
                             loading={this.state.loading}
-                            message={this.state.messageImage}
+                            //message={this.props.message}
+                            messagePost={this.props.messagePost}
                             handleShowMediaLibrary={this.props.handleShowMediaLibrary}
                             onClick1={this.props.handleShowMediaLibrary}
-                            onClick2={this.handleUpdatePost}
+                            handleUpdatePost={this.props.handleUpdatePost}
+                            handleClose={this.props.handleClose}
                         />
 
                         <PostBox 

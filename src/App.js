@@ -36,6 +36,7 @@ class App extends Component {
       isLoading: false,
       loadingPosts: false,
       showMediaLibrary: false,
+      mediaItems: false,
       searchItems: '',
       imageDetail: false,
       postFeaturedImage: false,
@@ -95,6 +96,11 @@ class App extends Component {
   fetchPost = (post) => { 
       this.setState({ 
         post,
+        postId: post.id,
+        postStatus: post.status,
+        postColgado: post.colgado,
+        postTitle: post.title.rendered,
+        postExcerpt: post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
       })
       this.fetchFeaturedImage()
   }
@@ -249,6 +255,7 @@ class App extends Component {
       this.setState({
         isLoading: true,
         imageDetail: false,
+        mediaItems: []
       });
     fetch(Constants.apiUrl + 'wp/v2/media/?per_page=20' + search, {
         headers: {
@@ -293,7 +300,6 @@ class App extends Component {
       previewImgUrl: false,
       uploadFile: false
     }));
-
   }
 
   handleMediaSelect = (e, item) => {
@@ -332,36 +338,32 @@ class App extends Component {
     this.setState({
       isLoading: true
     });
-    let reader = new FileReader();
-    reader.readAsDataURL( this.state.fileToUpload );
 
-    reader.onload = (e) => {
-      //console.log(e.target.result);
-      const formData={file: e.target.result}
+    var data = new FormData()
+    data.append('file', this.state.fileToUpload)
 
-      fetch(Constants.apiUrl + 'wp/v2/media', {
-        method: 'post',
-        headers: {
-          authorization: 'Bearer ' + this.state.token,
-        },
-        body: formData
-      })
-      .then(res => res.json())
-      .then((responseJson) => {
-          //console.log(responseJson);
-          this.setState({
-            isLoading: false,
-          });
-         }
-      )
-      .catch(error => console.log(error))
-
-    }
+    fetch(Constants.apiUrl + 'wp/v2/media', {
+      method: 'post',
+      headers: {
+        authorization: 'Bearer ' + this.state.token,
+      },
+      body: data
+    })
+    .then(res => res.json())
+    .then((responseJson) => {
+        this.fetchMediaItems();
+        this.setState({
+          isLoading: false,
+          tabsValue: 1,
+        });
+       }
+    )
+    .catch(error => console.log(error))
   }
 
   generatePreviewImgUrl = (file, callback) => {
-    const reader = new FileReader()
-    const url = reader.readAsDataURL(file)
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
     reader.onloadend = e => callback(reader.result)
   }
 
@@ -369,6 +371,40 @@ class App extends Component {
     this.setState({
       imageDetail: true
     })
+  }
+
+  handleUpdatePost = () => {
+    this.setState({
+        processing: true,
+        messagePost: 'Procesando...'
+    });
+    //let FeaturedMedia = this.props.postFeaturedMedia;
+    let postId = this.state.postId ? this.state.postId : '';
+    fetch(Constants.apiUrl + 'wp/v2/posts/' + postId, {
+        method: 'post',
+        headers:{
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        },
+        body:JSON.stringify({
+            title: this.state.postTitle,
+            content: this.state.editorContentHtml,
+            date: this.state.postDate,
+            excerpt: this.state.postExcerpt,
+            status: this.state.postStatus,
+            //colgado: this.state.postColgado,
+            categories: this.state.postCategories,
+            tags: this.state.postTags,
+            featured_media: this.state.postFeaturedImage.id
+        })
+    })
+    .then(response => response.json())
+    .then(() => this.setState({
+        processing: false,
+        messagePost: 'Artículo guardado correctamente'
+    }))
+    //.then(() => this.props.fetchPosts)
   }
 
   render() {
@@ -409,15 +445,22 @@ class App extends Component {
           !this.state.showMediaLibrary &&
           <PostEditor 
               token = {this.state.token}
+              fetchPost = {this.fetchPost}
               post = {this.state.post}
+              postStatus = {this.state.postStatus}
+              postColgado = {this.state.postColgado}
+              postTitle = {this.state.postTitle}
+              postExcerpt = {this.state.postExcerpt} 
               postFeaturedImage = {this.state.postFeaturedImage}
               fetchFeaturedImage = {this.fetchFeaturedImage}
               handleChange = {this.handleChange}
               handleClose = {this.handleClose}
+              handleUpdatePost = {this.handleUpdatePost}
               categories = {this.state.categories}
               tags = {this.state.tags}
               handleShowMediaLibrary = {this.handleShowMediaLibrary}
               isLoading = {this.state.isLoading}
+              messagePost = {this.state.messagePost}
               status = {this.state.status}
           />
         }

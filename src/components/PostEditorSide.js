@@ -23,6 +23,9 @@ const styles = (theme) => ({
         '& .side-editor-panel': {
             width: '100%',
         },
+        '& .button': {
+            width: '100%',
+        },
         '& .post-box': {
             marginBottom: 20,
             fontSize: theme.spacing.unit,
@@ -30,16 +33,20 @@ const styles = (theme) => ({
                 float: 'right',
                 maxWidth: 200,
             },
-            '& .button': {
-                width: '100%',
-            },
             '& .img-container': {
                 textAlign: 'center',
             },
         },
         '& .post-box:last-child': {
             marginBottom: 0,
-        }
+        },
+        '& .button-wrapper': {
+            display: 'block',
+            padding: '20px 24px 4px'
+        },
+        '& .button-wrapper .button': {
+            marginBottom: 20,
+        },
     },
 })
 
@@ -196,6 +203,31 @@ const PostEditorSide = (props) => (
                         onClick1={props.onClick1}
                     />
                 </div>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel
+            defaultExpanded={true}
+        >
+            <ExpansionPanelDetails 
+                className='button-wrapper'
+            >
+                <PostBoxButton 
+                    primary
+                    onClick={props.handleUpdatePost}
+                    label='Guardar'
+                />
+                <PostBoxButton 
+                    onClick={props.handleClose}
+                    label='Cerrar'
+                />
+                {
+                props.messagePost !== '' && 
+                    <Typography 
+                        className='label secondary'
+                        color="textSecondary" gutterBottom>
+                        {props.messagePost}
+                    </Typography>
+                }
             </ExpansionPanelDetails>
         </ExpansionPanel>
     </div>

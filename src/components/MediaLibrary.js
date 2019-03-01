@@ -79,7 +79,7 @@ const MediaLibrary = (props) => {
                 <Grid container spacing={24}>
                     <Card className='card'>
                         {
-                        props.uploadFile &&
+                        props.previewImgUrl &&
                             <CardMedia
                                 image={props.previewImgUrl} 
                                 className='card-media'
@@ -87,7 +87,7 @@ const MediaLibrary = (props) => {
                         }
                         <CardContent>
                             <input onChange={props.handleChange} type='file' name='uploadFile' id='upload-file' />
-                            <label for='upload-file' className='label-button'
+                            <label htmlFor='upload-file' className='label-button'
                             >Seleccionar imagen local</label>
                             {
                                 props.uploadFile &&
@@ -125,6 +125,10 @@ const MediaLibrary = (props) => {
             }
             {
                 props.isLoading && props.tabsValue===0 &&
+                <Loading/>
+            }
+            {
+                props.isLoading && props.mediaItems.length===0 &&
                 <Loading/>
             }
             </Grid>
