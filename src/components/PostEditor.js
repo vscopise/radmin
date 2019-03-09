@@ -43,11 +43,15 @@ class PostEditor extends Component {
             editorState,
             editorContentHtml: stateToHTML(editorState.getCurrentContent()),
             //status: Constants.status,
-            //postStatus: this.props.post.status,
+            postColgado: this.props.post.colgado,
+            postTitle: this.replaceAll(this.props.post.title.rendered, Constants.stringReplacement),
+            postExcerpt: this.replaceAll(this.props.post.excerpt.rendered, Constants.stringReplacement),
+            postStatus: this.props.post.status,
+
             postCategories:this.props.post.categories,
             postTags:this.props.post.tags,
             postDate: this.props.post.date,
-            postFeaturedMedia: this.props.postFeaturedMedia,
+            postFeaturedMedia: false,
             processing: false,
             loading: false,
             messageImage: '',
@@ -56,11 +60,7 @@ class PostEditor extends Component {
     }
 
     componentDidMount() {
-        /*this.setState({
-            postColgado: this.props.post.colgado,
-            postExcerpt: this.props.post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
-        });*/
-        this.props.fetchFeaturedImage();
+        this.fetchFeaturedImage();
     }
 
     handleChange = event => {
@@ -68,11 +68,7 @@ class PostEditor extends Component {
         change[event.target.name] = event.target.value
         this.setState(change)
     }
-    
-    /*handleDateChange = date => {
-        this.setState({ selectedDate: date });
-    };*/
-
+  
     onContentChange = editorState => {
         this.setState({
             editorState,
@@ -80,39 +76,47 @@ class PostEditor extends Component {
         }); 
     }
 
-    /*handleUpdatePost = () => {
-        this.setState({
-            processing: true,
-            messagePost: 'Procesando...'
+    replaceAll = (str, mapObj) => {
+        var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
+    
+        return str.replace(re, function(matched){
+            return mapObj[matched.toLowerCase()];
         });
-        //let FeaturedMedia = this.props.postFeaturedMedia;
-        let postId = this.props.post.id ? this.props.post.id : '';
-        fetch(Constants.apiUrl + 'wp/v2/posts/' + postId, {
-            method: 'post',
-            headers:{
-                'Content-Type': 'application/json',
-                'accept': 'application/json',
-                'Authorization': 'Bearer ' + this.props.token
-            },
-            body:JSON.stringify({
-                title: this.props.postTitle,
-                content: this.state.editorContentHtml,
-                date: this.state.postDate,
-                excerpt: this.props.postExcerpt,
-                status: this.state.postStatus,
-                colgado: this.props.postColgado,
-                categories: this.state.postCategories,
-                tags: this.state.postTags,
-                featured_media: this.props.postFeaturedImage.id
-            })
+    }
+
+    fetchFeaturedImage = () => {
+        this.setState({ 
+          isLoading: true, 
+          postFeaturedImage: false
         })
-        .then(response => response.json())
-        .then(() => this.setState({
-            processing: false,
-            messagePost: 'Artículo guardado correctamente'
-        }))
-        //.then(() => this.props.fetchPosts)
-    }*/
+        if (this.props.post.featured_media) {
+          fetch(Constants.apiUrl + 'wp/v2/media/' + this.props.post.featured_media)  
+          .then((response) => {
+              if(response.ok) {
+                  response.json().then(image => {
+                      this.setState({
+                          postFeaturedImage: image,
+                          isLoading: false,
+                      })
+                  });
+              } else {
+                  this.setState({
+                      messageImage: 'Error cargando la imagen',
+                      isLoading: false,
+                  });
+              }
+          })
+          .catch((ex) => {
+            this.setState({
+                messageImage: 'Error cargando la imagen'
+            });
+          });
+        } else {
+          this.setState({
+            isLoading: false,
+          });
+        }
+    }
 
     render() {
         return (
@@ -126,8 +130,8 @@ class PostEditor extends Component {
                                 label='Colgado'
                                 variant='filled'
                                 fullWidth
-                                value={this.props.postColgado}
-                                onChange={this.props.handleChange}
+                                value={this.state.postColgado}
+                                onChange={this.handleChange}
                                 name='postColgado'
                             />
                         </div>
@@ -138,8 +142,8 @@ class PostEditor extends Component {
                                 label='Título'
                                 variant='filled'
                                 fullWidth
-                                value={this.props.postTitle}
-                                onChange={this.props.handleChange}
+                                value={this.state.postTitle}
+                                onChange={this.handleChange}
                                 name='postTitle'
                             />
                         </div>
@@ -149,8 +153,8 @@ class PostEditor extends Component {
                                 label='Copete'
                                 fullWidth
                                 multiline
-                                value={this.props.postExcerpt}
-                                onChange={this.props.handleChange}
+                                value={this.state.postExcerpt}
+                                onChange={this.handleChange}
                                 name='postExcerpt'
                             />
                         </div>                        
@@ -163,32 +167,23 @@ class PostEditor extends Component {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <PostEditorSide
-                            postStatus={this.props.postStatus}
+                            postStatus={this.state.postStatus}
                             status={this.props.status}
                             postCategories={this.state.postCategories}
-                            categories={this.props.categories}
                             postTags={this.state.postTags}
+                            categories={this.props.categories}
                             tags={this.props.tags}
                             handleChange={this.handleChange}
                             postDate={this.state.postDate}
-                            postFeaturedImage={this.props.postFeaturedImage}
+                            postFeaturedImage={this.state.postFeaturedImage}
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
                             loading={this.state.loading}
-                            //message={this.props.message}
                             messagePost={this.props.messagePost}
                             handleShowMediaLibrary={this.props.handleShowMediaLibrary}
                             onClick1={this.props.handleShowMediaLibrary}
                             handleUpdatePost={this.props.handleUpdatePost}
                             handleClose={this.props.handleClose}
                         />
-
-                        <PostBox 
-                            onClick1={this.props.handleClose}
-                            onClick2={this.handleUpdatePost}
-                            disabledButtons={this.state.processing}
-                            message={this.state.messagePost}
-                        />
-                        
                     </Grid>
                 </Grid>
             </div>

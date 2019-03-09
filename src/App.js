@@ -19,10 +19,10 @@ class App extends Component {
       disableSubmitLogin: true,
       token: false,
       post: false,
-      postColgado: '',
-      postTitle: '',
-      postExcerpt: '',
-      postStatus: [],
+      //postColgado: '',
+      //postTitle: '',
+      //postExcerpt: '',
+      //postStatus: [],
       posts: [],
       categories: false,
       categoriesSelected: [],
@@ -39,10 +39,11 @@ class App extends Component {
       mediaItems: false,
       searchItems: '',
       imageDetail: false,
-      postFeaturedImage: false,
+      // postFeaturedImage: false,
       uploadFile: false,
       previewImgUrl: false,
       tabsValue: 1,
+      postUpdated: false,
     };
   }
 
@@ -97,12 +98,10 @@ class App extends Component {
       this.setState({ 
         post,
         postId: post.id,
-        postStatus: post.status,
-        postColgado: post.colgado,
-        postTitle: post.title.rendered,
-        postExcerpt: post.excerpt.rendered.replace(/(\r\n|\n|\r|<[^>]*>)/gm, ''),
+        postUpdated: false,
+        messagePost: '',
       })
-      this.fetchFeaturedImage()
+      //this.fetchFeaturedImage()
   }
 
   newPost = () => {
@@ -115,46 +114,46 @@ class App extends Component {
         content: {rendered: ''},
         title: {rendered: ''},
         excerpt: {rendered: ''},
-
+        messagePost: '',
       },
       //postFeaturedImage: false,
       //isLoading: false,
     });
   }
 
-  fetchFeaturedImage = () => {
-      this.setState({ 
-        isLoading: true, 
-        postFeaturedImage: false
-      })
-      if (this.state.post.featured_media) {
-        fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media)  
-        .then((response) => {
-            if(response.ok) {
-                response.json().then(image => {
-                    this.setState({
-                        postFeaturedImage: image,
-                        isLoading: false,
-                    })
-                });
-            } else {
-                this.setState({
-                    messageImage: 'Error cargando la imagen',
-                    isLoading: false,
-                });
-            }
-        })
-        .catch((ex) => {
-          this.setState({
-              messageImage: 'Error cargando la imagen'
-          });
-        });
-      } else {
-        this.setState({
-          isLoading: false,
-        });
-      }
-  }
+  // fetchFeaturedImage = () => {
+  //     this.setState({ 
+  //       isLoading: true, 
+  //       postFeaturedImage: false
+  //     })
+  //     if (this.state.post.featured_media) {
+  //       fetch(Constants.apiUrl + 'wp/v2/media/' + this.state.post.featured_media)  
+  //       .then((response) => {
+  //           if(response.ok) {
+  //               response.json().then(image => {
+  //                   this.setState({
+  //                       postFeaturedImage: image,
+  //                       isLoading: false,
+  //                   })
+  //               });
+  //           } else {
+  //               this.setState({
+  //                   messageImage: 'Error cargando la imagen',
+  //                   isLoading: false,
+  //               });
+  //           }
+  //       })
+  //       .catch((ex) => {
+  //         this.setState({
+  //             messageImage: 'Error cargando la imagen'
+  //         });
+  //       });
+  //     } else {
+  //       this.setState({
+  //         isLoading: false,
+  //       });
+  //     }
+  // }
 
   fetchPosts = () => {
       this.setState({
@@ -273,7 +272,10 @@ class App extends Component {
   handleClose = () => {
     this.setState({
         post: false
-    })
+    });
+    if (true === this.state.postUpdated) {
+      this.fetchPosts();
+    }
   }
 
   handleShowMediaLibrary = () => {
@@ -402,6 +404,7 @@ class App extends Component {
     .then(response => response.json())
     .then(() => this.setState({
         processing: false,
+        postUpdated: true,
         messagePost: 'Artículo guardado correctamente'
     }))
     //.then(() => this.props.fetchPosts)
@@ -447,21 +450,23 @@ class App extends Component {
               token = {this.state.token}
               fetchPost = {this.fetchPost}
               post = {this.state.post}
-              postStatus = {this.state.postStatus}
-              postColgado = {this.state.postColgado}
-              postTitle = {this.state.postTitle}
-              postExcerpt = {this.state.postExcerpt} 
+              status = {this.state.status}
+              //postStatus = {this.state.postStatus}
+              //postColgado = {this.state.postColgado}
+              //postTitle = {this.state.postTitle}
+              //postExcerpt = {this.state.postExcerpt} 
               postFeaturedImage = {this.state.postFeaturedImage}
               fetchFeaturedImage = {this.fetchFeaturedImage}
               handleChange = {this.handleChange}
               handleClose = {this.handleClose}
               handleUpdatePost = {this.handleUpdatePost}
               categories = {this.state.categories}
+              //postCategories = {this.state.postCategories}
               tags = {this.state.tags}
+              //postTags = {this.state.postTags}
               handleShowMediaLibrary = {this.handleShowMediaLibrary}
               isLoading = {this.state.isLoading}
               messagePost = {this.state.messagePost}
-              status = {this.state.status}
           />
         }
         {

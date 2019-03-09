@@ -8,3 +8,14 @@ export const status = [
     {id: 'pending', name: 'Pendiente'},
     {id: 'private', name: 'Privada'},
 ]
+export const stringReplacement = {
+    '&#038;': '&',
+    '&#8211;': '-',
+    '&#8216;': '\'',
+    '&#8217;': '\'',
+    '&#8220;': '"',
+    '&#8221;': '"',
+    '<p>': '',
+    '</p>': '',
+    '\n': '',
+}
