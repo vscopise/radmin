@@ -91,9 +91,12 @@ const PostBox = (props) => (
                 {
                     props.postFeaturedImage &&
                     <div className='img-container'>
-                        <img src={props.postFeaturedImage.media_details.sizes.thumbnail.source_url} alt='' />
+                        <img 
+                            src={props.postFeaturedImage.media_details.sizes.thumbnail.source_url} 
+                            alt='' 
+                        />
                         <PostBoxButton 
-                            onClick={props.onClick1}
+                            onClick={props.handleShowMediaLibrary}
                             disabled={props.disabledButtons}
                             label='Reemplazar imagen'
                         />
@@ -105,7 +108,7 @@ const PostBox = (props) => (
                         onClick={props.handleShowMediaLibrary}
                         primary={true}
                         disabled={props.disabledButtons}
-                        label='Establecer imagen destacada'
+                        label='Establecer imagen'
                     />
                 }
             </div>

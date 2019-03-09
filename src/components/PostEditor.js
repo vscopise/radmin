@@ -18,7 +18,7 @@ import {
     withStyles,
 } from '@material-ui/core';
 import styles from '../styles/Styles';
-import PostBox from './PostBox';
+// import PostBox from './PostBox';
 //import PostBoxSelect from './PostBoxSelect';
 import PostEditorSide from './PostEditorSide';
 
@@ -87,36 +87,75 @@ class PostEditor extends Component {
     fetchFeaturedImage = () => {
         this.setState({ 
           isLoading: true, 
-          postFeaturedImage: false
+        //   postFeaturedImage: false
         })
-        if (this.props.post.featured_media) {
-          fetch(Constants.apiUrl + 'wp/v2/media/' + this.props.post.featured_media)  
-          .then((response) => {
-              if(response.ok) {
-                  response.json().then(image => {
-                      this.setState({
-                          postFeaturedImage: image,
-                          isLoading: false,
-                      })
-                  });
-              } else {
-                  this.setState({
-                      messageImage: 'Error cargando la imagen',
-                      isLoading: false,
-                  });
-              }
-          })
-          .catch((ex) => {
-            this.setState({
-                messageImage: 'Error cargando la imagen'
+        // if (this.props.post.featured_media) {
+        if(!this.props.postFeaturedImage) {
+        // if (!this.state.postFeaturedMedia) {
+            fetch(Constants.apiUrl + 'wp/v2/media/' + this.props.post.featured_media)  
+            .then((response) => {
+                if(response.ok) {
+                    response.json().then(image => {
+                        this.setState({
+                            postFeaturedImage: image,
+                            isLoading: false,
+                        })
+                    });
+                } else {
+                    this.setState({
+                        messageImage: 'Error cargando la imagen',
+                        isLoading: false,
+                    });
+                }
+            })
+            .catch((ex) => {
+                this.setState({
+                    messageImage: 'Error cargando la imagen'
+                });
             });
-          });
         } else {
-          this.setState({
-            isLoading: false,
-          });
+            this.setState({
+                isLoading: false,
+                postFeaturedImage: this.props.postFeaturedImage
+            });
         }
     }
+
+    handleUpdatePost = () => {
+        this.setState({
+            processing: true,
+            messagePost: 'Procesando...'
+        });
+        //let FeaturedMedia = this.props.postFeaturedMedia;
+        let postId = this.props.post.id ? this.props.post.id : '';
+        let token = this.props.token;
+        fetch(Constants.apiUrl + 'wp/v2/posts/' + postId, {
+            method: 'post',
+            headers:{
+                'Content-Type': 'application/json',
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + this.props.token
+            },
+            body:JSON.stringify({
+                title: this.state.postTitle,
+                content: this.state.editorContentHtml,
+                date: this.state.postDate,
+                excerpt: this.state.postExcerpt,
+                status: this.state.postStatus,
+                //colgado: this.state.postColgado,
+                categories: this.state.postCategories,
+                tags: this.state.postTags,
+                featured_media: this.state.postFeaturedImage.id
+            })
+        })
+        .then(response => response.json())
+        .then(() => this.setState({
+            processing: false,
+            postUpdated: true,
+            messagePost: 'Artículo guardado correctamente'
+        }))
+        .then(this.props.fetchPosts)
+      }
 
     render() {
         return (
@@ -178,10 +217,11 @@ class PostEditor extends Component {
                             postFeaturedImage={this.state.postFeaturedImage}
                             handleFeaturedImageClick={this.handleFeaturedImageClick}
                             loading={this.state.loading}
-                            messagePost={this.props.messagePost}
+                            processing={this.state.processing}
+                            messagePost={this.state.messagePost}
                             handleShowMediaLibrary={this.props.handleShowMediaLibrary}
-                            onClick1={this.props.handleShowMediaLibrary}
-                            handleUpdatePost={this.props.handleUpdatePost}
+                            //onClick1={this.props.handleShowMediaLibrary}
+                            handleUpdatePost={this.handleUpdatePost}
                             handleClose={this.props.handleClose}
                         />
                     </Grid>

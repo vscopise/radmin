@@ -55,8 +55,11 @@ const styles = {
             '&:hover': {
                 backgroundColor: 'rgba(0, 0, 0, 0.08)',
                 cursor: 'pointer',
-            }
+            },
         },
+        '& .image-container img': {
+            maxWidth: '100%',
+        }
     }
 }
 
@@ -75,7 +78,7 @@ const MediaLibrary = (props) => {
             </Tabs>
             <Grid item xs={12} sm={9}>
             {
-                ! props.isLoading && ! props.imageDetail && props.tabsValue===0 &&
+                ! props.isLoading && ! props.postFeaturedImage && props.tabsValue===0 &&
                 <Grid container spacing={24}>
                     <Card className='card'>
                         {
@@ -86,8 +89,15 @@ const MediaLibrary = (props) => {
                             />
                         }
                         <CardContent>
-                            <input onChange={props.handleChange} type='file' name='uploadFile' id='upload-file' />
-                            <label htmlFor='upload-file' className='label-button'
+                            <input 
+                                onChange={props.handleChange} 
+                                type='file' 
+                                name='uploadFile' 
+                                id='upload-file' 
+                            />
+                            <label 
+                                htmlFor='upload-file' 
+                                className='label-button'
                             >Seleccionar imagen local</label>
                             {
                                 props.uploadFile &&
@@ -106,21 +116,31 @@ const MediaLibrary = (props) => {
                 </Grid>
             }
             {
-                ! props.isLoading && ! props.imageDetail && props.tabsValue===1 &&
+                ! props.isLoading && ! props.postFeaturedImage && props.tabsValue===1 &&
                 <Grid container spacing={24}>
                 {
                     props.mediaItems.map(item =>(
-                        <Grid item key={item.id} onClick={e => props.handleMediaSelect(e, item)}>
-                            <img src={item.media_details.sizes.thumbnail.source_url} alt='' />
+                        <Grid 
+                            item 
+                            key={item.id} 
+                            onClick={e => props.handleMediaSelect(e, item)}
+                        >
+                            <img 
+                                src={item.media_details.sizes.thumbnail.source_url} 
+                                alt='' 
+                            />
                         </Grid>
                     ))
                 }
                 </Grid>
             }
             {
-                ! props.isLoading && props.imageDetail &&
+                ! props.isLoading && props.postFeaturedImage &&
                 <div className='image-container'>
-                    <img src={props.postFeaturedImage.media_details.sizes.full.source_url} alt='' />
+                    <img 
+                        src={props.postFeaturedImage.media_details.sizes.full.source_url} 
+                        alt='' 
+                    />
                 </div>
             }
             {

@@ -39,7 +39,7 @@ class App extends Component {
       mediaItems: false,
       searchItems: '',
       imageDetail: false,
-      // postFeaturedImage: false,
+      postFeaturedImage: false,
       uploadFile: false,
       previewImgUrl: false,
       tabsValue: 1,
@@ -280,7 +280,8 @@ class App extends Component {
 
   handleShowMediaLibrary = () => {
       this.setState({
-          showMediaLibrary: ! this.state.showMediaLibrary
+          showMediaLibrary: true,
+          postFeaturedImage: false,
       })
   }
 
@@ -312,24 +313,6 @@ class App extends Component {
       },
       postFeaturedImage: item
     }));
-  }
-
-  handleChange = event => {
-      let change = {}
-      change[event.target.name] = event.target.value;
-      this.setState(change);
-
-      if ( event.target.files ) {
-        const fileToUpload = event.target.files[0]
-        if ( !fileToUpload ) {
-          return
-        }
-        this.setState({fileToUpload})
-      
-        this.generatePreviewImgUrl(fileToUpload, previewImgUrl => {
-          this.setState({ previewImgUrl })
-        })
-      }
   }
 
   handleChangeTab = (event, value) => {
@@ -367,47 +350,6 @@ class App extends Component {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = e => callback(reader.result)
-  }
-
-  handleimageDetail = () => {
-    this.setState({
-      imageDetail: true
-    })
-  }
-
-  handleUpdatePost = () => {
-    this.setState({
-        processing: true,
-        messagePost: 'Procesando...'
-    });
-    //let FeaturedMedia = this.props.postFeaturedMedia;
-    let postId = this.state.postId ? this.state.postId : '';
-    fetch(Constants.apiUrl + 'wp/v2/posts/' + postId, {
-        method: 'post',
-        headers:{
-            'Content-Type': 'application/json',
-            'accept': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        },
-        body:JSON.stringify({
-            title: this.state.postTitle,
-            content: this.state.editorContentHtml,
-            date: this.state.postDate,
-            excerpt: this.state.postExcerpt,
-            status: this.state.postStatus,
-            //colgado: this.state.postColgado,
-            categories: this.state.postCategories,
-            tags: this.state.postTags,
-            featured_media: this.state.postFeaturedImage.id
-        })
-    })
-    .then(response => response.json())
-    .then(() => this.setState({
-        processing: false,
-        postUpdated: true,
-        messagePost: 'Artículo guardado correctamente'
-    }))
-    //.then(() => this.props.fetchPosts)
   }
 
   render() {
@@ -449,21 +391,16 @@ class App extends Component {
           <PostEditor 
               token = {this.state.token}
               fetchPost = {this.fetchPost}
+              fetchPosts = {this.fetchPosts}
               post = {this.state.post}
               status = {this.state.status}
-              //postStatus = {this.state.postStatus}
-              //postColgado = {this.state.postColgado}
-              //postTitle = {this.state.postTitle}
-              //postExcerpt = {this.state.postExcerpt} 
+              categories = {this.state.categories}
+              tags = {this.state.tags}
               postFeaturedImage = {this.state.postFeaturedImage}
               fetchFeaturedImage = {this.fetchFeaturedImage}
               handleChange = {this.handleChange}
               handleClose = {this.handleClose}
               handleUpdatePost = {this.handleUpdatePost}
-              categories = {this.state.categories}
-              //postCategories = {this.state.postCategories}
-              tags = {this.state.tags}
-              //postTags = {this.state.postTags}
               handleShowMediaLibrary = {this.handleShowMediaLibrary}
               isLoading = {this.state.isLoading}
               messagePost = {this.state.messagePost}
