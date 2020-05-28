@@ -1,0 +1,31 @@
+.SearchZonePosts {
+    margin-top: 30px;
+    padding: 10px;
+    border: 1px solid #999;
+    background: #ddd;
+}
+.inputTitle {
+    width: 100%;
+    padding: 10px;
+}
+.searchPost {
+    margin-top: 20px;
+    width: 200px;
+}
+.postItems {
+    background: #eee;
+    padding: 10px 0;
+    margin: 20px 0;
+}
+.postItems div {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+.postItems p {
+    margin: 0;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.postItems p:hover {
+    background: #ddd;
+}

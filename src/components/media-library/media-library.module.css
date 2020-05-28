@@ -1,0 +1,51 @@
+.MediaLibrary {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: auto;
+}
+.MediaDetail img { 
+    max-width: 100%;
+}
+.MediaDetail p {
+    font-size: 0.8rem;
+    margin: 0;
+}
+.MediaDetail .MediaDetailTitle {
+    font-weight: bold;
+    margin: 1rem 0;
+}
+.MediaCaption p {
+    display: inline;
+}
+.ButtonFile{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+    z-index: -1;
+}
+.ButtonFile + label{
+    background: #f7f7f7;
+    border-color: #ccc;
+    box-shadow: inset 0 -1px 0 #ccc;
+    color: #555;
+    border-width: 1px;
+    border-style: solid;
+    margin: 0 0 1rem 0;
+    font-size: 12px;
+    border-radius: 4px;
+    padding: 0.8em;
+    cursor: pointer;
+    text-align: center;
+    transition: all 200ms ease-in-out;
+}
+.ButtonFile + label:hover {
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.3);
+    transform: translateY(-4px);
+
+}
+.button:hover {
+  }

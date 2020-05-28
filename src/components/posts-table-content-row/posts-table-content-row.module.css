@@ -1,0 +1,23 @@
+.future{
+    background: rgba(255,245,196,.95);
+}
+.listTerms {
+    /* width: 15px; */
+}
+.listTerms input {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 8px;
+    box-shadow: 0 0 0 transparent;
+    transition: box-shadow .1s linear;
+    border-radius: 4px;
+    border: 1px solid #8d96a0;
+    margin-bottom: 1rem;
+}
+.Row td:nth-child(1) { width: 3%; }
+.Row td:nth-child(2) { width: 41%; }
+.Row td:nth-child(3) { width: 11%; }
+.Row td:nth-child(4) { width: 10%; }
+.Row td:nth-child(5) { width: 10%; }
+.Row td:nth-child(6) { width: 10%; }
+.Row td:nth-child(7) { width: 3%; }

@@ -1,0 +1,119 @@
+/*//////////////////////////////////////////////////////////////////
+[ Scroll bar ]*/
+.js-pscroll {
+  position: relative;
+  overflow: hidden;
+}
+
+.table100 .psRailY {
+  width: 9px;
+  background-color: transparent;
+  opacity: 1 !important;
+  right: 5px;
+}
+
+.table100 .psRailY::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #ebebeb;
+  border-radius: 5px;
+  width: 100%;
+  height: calc(100% - 30px);
+  left: 0;
+  top: 15px;
+}
+
+.table100 .psRailY .psThumbY {
+  width: 100%;
+  right: 0;
+  background-color: transparent;
+  opacity: 1 !important;
+}
+
+.table100 .psRailY .psThumbY::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #cccccc;
+  border-radius: 5px;
+  width: 100%;
+  height: calc(100% - 30px);
+  left: 0;
+  top: 15px;
+}
+
+
+
+
+.limiter {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.containerTable100 {
+  width: 100%;
+  background: #fff;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 33px 30px;
+}
+
+.wrapTable100 {
+  width: 100%;
+}
+
+
+
+
+/*==================================================================
+[ Fix header ]*/
+.table100 {
+  background-color: #fff;
+  position: relative;
+  padding-top: 60px;
+}
+
+
+/*---------------------------------------------*/
+
+.table100.ver1 {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+  -o-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+  -ms-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+}
+/*//////////////////////////////////////////////////////////////////
+[ Scroll bar ]*/
+.jsPscroll {
+  position: relative;
+}
+
+.ps {
+  overflow-anchor: none;
+  -ms-overflow-style: none;
+  touch-action: auto;
+  -ms-touch-action: auto;
+}
+
+
+.table100.ver1 .psRailY {
+  right: 5px;
+}
+
+.table100.ver1 .psRailY::before {
+  background-color: #ebebeb;
+}
+
+.table100.ver1 .psRailY .psThumbY::before {
+  background-color: #cccccc;
+}

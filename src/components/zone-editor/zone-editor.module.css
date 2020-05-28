@@ -1,0 +1,21 @@
+.ZoneEditor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: auto;
+}
+.ZonasSelect {
+    margin-bottom: 1em;
+}
+.ZonasSelect p {
+    font-size: 0.75rem;
+}
+.Select {
+    font-size: 15px;
+    padding: 0.8em 0.4em;
+    border-radius: 4px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+    border: 1px solid #ccc;
+    width: 100%;
+}

@@ -1,0 +1,12 @@
+.Select {
+    margin-right: 10px;
+    font-size: 15px;
+    padding: 0.8em 0.4em;
+    border-radius: 4px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+    border: 1px solid #ccc;
+    width: 200px;
+}
+.Select option {
+    color: #777;
+}

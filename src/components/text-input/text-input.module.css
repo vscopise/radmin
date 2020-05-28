@@ -1,0 +1,45 @@
+.TextInput {
+    color: #384047;
+    background-color: #e8eeef;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    border: none;
+    border-radius: 4px;
+    padding: 1em;
+    margin-bottom: 1.2em ;
+    font-size: 1.5rem;
+    width: 100%;
+    position: relative;
+    
+}
+.textarea {
+    width: 100%;
+    outline: none;
+    min-height: 1.2em;
+    padding: 0;
+    box-shadow: none;
+    display: block;
+    overflow: hidden;
+    resize: none;
+    transition: height 0.2s ease;
+    font-size: 1rem;
+}
+.textareaGhost {
+    opacity: 0.3;
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;  
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+}
+.title {
+    font-size: 2.5rem;
+}
+.small {
+    font-size: 1rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+.small textarea {
+    background: #fff;
+}

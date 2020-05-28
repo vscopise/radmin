@@ -1,0 +1,14 @@
+.selectTerm input {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 8px;
+    box-shadow: 0 0 0 transparent;
+    transition: box-shadow .1s linear;
+    border-radius: 4px;
+    border: 1px solid #8d96a0;
+    margin-bottom: 1rem;
+}
+.listTerms {
+    max-height: 500px;
+    overflow-y: scroll;
+}

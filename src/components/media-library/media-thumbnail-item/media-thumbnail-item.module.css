@@ -1,0 +1,14 @@
+.MediaItem {
+    float: left;
+    width: 10%;
+    padding: 8px;
+    cursor: pointer;
+}
+.Thumbnail {
+    
+}
+.Thumbnail img {
+    max-width: 100%;
+    min-width: 100%;
+    height: auto;
+}

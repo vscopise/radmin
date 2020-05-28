@@ -1,0 +1,13 @@
+.select {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+.select select {
+    float: right;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid #8d96a0;
+}
+.select span {
+    font-size: 12px;
+}
