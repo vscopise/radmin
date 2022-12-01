@@ -1,6 +1,7 @@
 //export const apiUrl = 'http://nueva.republica.com.uy/wp-json/';
 //export const apiUrl = 'http://babelshop.pixie.com.uy/wp-json/';
-export const apiUrl = 'https://republica.com.uy/wp-json/';
+//export const apiUrl = 'http://5dedos.com.uy/wp-json/';
+export const apiUrl = 'https://grupormultimedio.com/wp-json/';
 //export const apiUrl = 'http://localhost/diariolr/wp-json/';
 
 export const status = [

@@ -202,7 +202,7 @@ class App extends Component {
     if (this.state.statusSelected) {
         statusToFetch = '?status=' + this.state.statusSelected;
     } else {
-        statusToFetch = '?status=publish,future';
+        statusToFetch = '?status=publish';
     }
     let categorySelected = '';
     if ( this.state.categorySelected !== '0' ) {

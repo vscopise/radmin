@@ -5,10 +5,11 @@
     cursor: pointer;
 }
 .Thumbnail {
-    
+    width: 100px;
+    height: 100px;
 }
 .Thumbnail img {
-    max-width: 100%;
+    /*max-width: 100%;*/
     min-width: 100%;
     height: auto;
 }

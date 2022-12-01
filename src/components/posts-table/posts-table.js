@@ -31,7 +31,7 @@ const PostTable = (props) => (
                         postsTableHeadFields = {props.postsTableHeadFields}
                     />
                     {
-                        props.posts &&
+                        props.posts && props.users &&
                         <PostsTableContent
                             categories={props.categories}
                             categorySelected={props.categorySelected}
