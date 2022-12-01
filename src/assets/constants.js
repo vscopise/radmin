@@ -12,7 +12,7 @@ export const status = [
     {id: 'private', name: 'Privada'},
 ];
 export const postsTableHeadFields = [
-    {id: 'title', name: 'Título'},
+    {id: 'title', name: 'Ttulo'},
     {id: 'author', name: 'Autor'},
     {id: 'categories', name: 'Categorías'},
     {id: 'labels', name: 'Etiquetas'},
